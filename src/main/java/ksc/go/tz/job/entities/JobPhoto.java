@@ -24,7 +24,7 @@ public class JobPhoto extends BaseEntity<UUID> {
     private Job job;
 
     @Column
-    private String stage;
+    private String image;
 
     @Column(name = "storage_url")
     private String storageUrl;
@@ -34,4 +34,9 @@ public class JobPhoto extends BaseEntity<UUID> {
 
     @Column
     private Boolean synced;
+
+    @PrePersist
+    protected void onCreate() {
+        capturedAt = LocalDateTime.now();
+    }
 }

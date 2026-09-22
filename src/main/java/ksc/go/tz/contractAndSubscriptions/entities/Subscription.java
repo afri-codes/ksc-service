@@ -2,9 +2,11 @@ package ksc.go.tz.contractAndSubscriptions.entities;
 
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.SubscriptionStatus;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,21 +20,20 @@ import java.util.UUID;
 @Where(clause = " deleted_at is null")
 public class Subscription extends BaseEntity<UUID> {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id", nullable = false)
     private Contract contract;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SubscriptionStatus status;
+
     private String recurrence;
 
-    @Column(name = "crew_size")
-    private Integer crewSize;
+    @Column(name = "cycle_size")
+    private Integer cycleSize;
 
-    @Column
-    private String frequency;
-
-    @Column
-    private String status;
+    @Column(name = "price_per_cycle")
+    private BigDecimal pricePerCycle;
 
     @Column(name = "next_run_date")
     private LocalDate nextRunDate;

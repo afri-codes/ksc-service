@@ -1,6 +1,6 @@
 package ksc.go.tz.quoting.dto;
 
-import ksc.go.tz.enums.ServiceLine;
+import ksc.go.tz.enums.LeadServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class QuoteDto {
 
     private String siteId;
 
-    private ServiceLine serviceLine;
+    private LeadServiceType serviceLine;
 
     private String clientTier;
 

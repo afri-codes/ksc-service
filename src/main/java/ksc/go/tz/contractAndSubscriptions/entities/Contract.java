@@ -1,6 +1,9 @@
 package ksc.go.tz.contractAndSubscriptions.entities;
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.Frequency;
+import ksc.go.tz.enums.LeadServiceType;
+import ksc.go.tz.enums.SignatureStatus;
 import ksc.go.tz.quoting.entities.Quote;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -19,39 +22,38 @@ import java.util.UUID;
 @Where(clause = " deleted_at is null")
 public class Contract extends BaseEntity<UUID> {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "quote_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quote_id", nullable = false, unique = true)
     private Quote quote;
 
-    private  String userId;
+    @Column(name = "client_id", nullable = false)
+    private String  clientId;
 
-    @Column(name = "service_line")
-    private String serviceLine;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "service_type")
+    private LeadServiceType serviceType;
+
+    @Column(name = "business_info")
+    private String businessInfo;
+
+    @Column(name = "personal_id_no")
+    private String personalIdNo;
+
+    @Enumerated(EnumType.STRING)
+    private Frequency frequency;
+
+    @Enumerated(EnumType.STRING)
+    private SignatureStatus signatureStatus;
+
+    @Column(name = "contract_value")
+    private BigDecimal contractValue;
+
+    @Column(name = "paid_at")
+    private LocalDate paidAt;
 
     @Column(name = "start_date")
     private LocalDate startDate;
 
     @Column(name = "end_date")
     private LocalDate endDate;
-
-    @Column(name = "business_hours")
-    private String businessHours;
-
-    @Column(name = "business_days")
-    private String businessDays;
-
-    private String frequency;
-
-    @Column(name = "contract_value", precision = 19, scale = 2)
-    private BigDecimal contractValue;
-
-    @Column(name = "staff_url")
-    private String staffUrl;
-
-    @Column(name = "signature_status")
-    private String signatureStatus;
-
-    @Column(name = "next_date")
-    private LocalDate nextDate;
-
 }

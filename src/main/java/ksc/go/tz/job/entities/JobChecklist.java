@@ -23,7 +23,7 @@ public class JobChecklist extends BaseEntity<UUID> {
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
-    @Column(name = "template_name")
+    @Column(name = "template_name", nullable = false)
     private String templateName;
 
 }

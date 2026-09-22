@@ -24,9 +24,8 @@ public class StaffRating extends BaseEntity<UUID> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "staff_id", nullable = false)
+
+    @Column(name = "staffId", nullable = false)
     private String staff;
 
     @Column(nullable = false)

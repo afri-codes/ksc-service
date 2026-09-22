@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class QuoteController {
     private final QuoteService quoteService;
@@ -29,7 +29,7 @@ public class QuoteController {
 
     @Operation(summary = "Save or add new quote ")
     @Permission(name="SAVE NEW QUOTE", code = "SAVE_QUOTE")
-    @PostMapping("/quote")
+    @PostMapping("/quotes")
     public  ApiResponseUtil.ApiResponseEntity<QuoteResponseDto> saveSite(@RequestBody @Valid QuoteDto quoteDto, Authentication authentication) {
         UUID createdBy = authDetailsExtractor.getUserId(authentication);
         return apiResponseUtil.getResponse(null, quoteService.addSite(quoteDto, createdBy), "Quote added successfully", ResponseEnum.SUCCESS);
@@ -46,7 +46,7 @@ public class QuoteController {
 
     @Operation(summary = "update quote ")
     @Permission(name="UPDATE QUOTE", code = "UPDATE_QUOTE")
-    @PutMapping("/quote/{id}")
+    @PutMapping("/quotes/{id}")
     public ApiResponseUtil.ApiResponseEntity<QuoteResponseDto> updateSite(@PathVariable("id") String siteId, @RequestBody QuoteDto siteDto, Authentication authentication) {
         QuoteResponseDto updatedSite = quoteService.updateSite(siteId, siteDto, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, updatedSite,"Quote updated successful",ResponseEnum.SUCCESS);
@@ -54,10 +54,23 @@ public class QuoteController {
     }
     @Operation(summary = "soft delete quote ")
     @Permission(name="DELETE QUOTE", code = "DELETE_QUOTE")
-    @DeleteMapping("/site/{quoteId}")
+    @DeleteMapping("/quotes/{quoteId}")
     public ApiResponseUtil.ApiResponseEntity<QuoteResponseDto> deleteById(@PathVariable (name = "id") String siteId, Authentication authentication){
         QuoteResponseDto quoteResponseDto =  quoteService.deleteById(siteId, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, quoteResponseDto,"Quote deleted successful",ResponseEnum.SUCCESS);
 
     }
+
+
+    // POST /api/v1/quotes/{id}/send
+
+    // POST /api/v1/quotes/{id}/accept
+
+    // GET /api/v1/quotes/{id}/pdf
+
+    // POST /api/v1/quotes/{id}/email
+
+    // POST /api/v1/quotes/{id}/create-contract
+
+
 }

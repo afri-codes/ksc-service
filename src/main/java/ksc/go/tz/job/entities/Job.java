@@ -6,7 +6,8 @@ import ksc.go.tz.common.BaseEntity;
 import ksc.go.tz.contractAndSubscriptions.entities.Contract;
 import ksc.go.tz.contractAndSubscriptions.entities.Subscription;
 import ksc.go.tz.enums.JobStatus;
-import ksc.go.tz.enums.ServiceLine;
+import ksc.go.tz.enums.JobType;
+import ksc.go.tz.enums.LeadServiceType;
 import ksc.go.tz.sitesAndAssests.entities.Sites;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -46,8 +47,13 @@ public class Job extends BaseEntity<UUID> {
     @Column(name = "service_line")
     private String serviceLine;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "service_type")
+    private LeadServiceType serviceType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "job_type")
-    private String jobType;
+    private JobType jobType;
 
     @Column(name = "scheduled_start")
     private LocalDateTime scheduledStart;

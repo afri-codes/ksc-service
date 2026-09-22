@@ -5,6 +5,7 @@ public enum JobStatus {
     IN_PROGRESS("In Progress"),
     COMPLETED("Completed"),
     CANCELLED("Cancelled"),
+    ASSIGNED("Assigned"),
     FAILED("Failed");
 
     private final String displayName;

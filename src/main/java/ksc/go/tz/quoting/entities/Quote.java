@@ -3,7 +3,9 @@ package ksc.go.tz.quoting.entities;
 
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
-import ksc.go.tz.enums.ServiceLine;
+import ksc.go.tz.enums.Frequency;
+import ksc.go.tz.enums.LeadServiceType;
+import ksc.go.tz.enums.QuoteStatus;
 import ksc.go.tz.sitesAndAssests.entities.Sites;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -26,13 +28,8 @@ public class Quote extends BaseEntity<UUID> {
     @JoinColumn(name = "site_id", nullable = false)
     private Sites site;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "requested_by", nullable = false)
-//    private String requestedBy;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "service_line")
-    private ServiceLine serviceLine;
+    @Column(name = "requested_by", nullable = false)
+    private String requestedBy;
 
     @Column(name = "client_tier")
     private String clientTier;
@@ -52,7 +49,17 @@ public class Quote extends BaseEntity<UUID> {
     @Column(name = "valid_until")
     private LocalDate validUntil;
 
-    @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "service_type", nullable = false)
+    private LeadServiceType serviceType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "frequency")
+    private Frequency frequency;
+
+    @Column(name = "area_sqm")
+    private BigDecimal areaSqm;
+
+    @Enumerated(EnumType.STRING)
+    private QuoteStatus status;
 }

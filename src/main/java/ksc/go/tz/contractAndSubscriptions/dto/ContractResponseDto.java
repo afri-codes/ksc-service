@@ -22,7 +22,7 @@ public class ContractResponseDto {
 
     private QuoteResponseDto quote;
 
-    private String userId;
+    private String clientId;
 
     private String serviceLine;
 
@@ -30,36 +30,26 @@ public class ContractResponseDto {
 
     private LocalDate endDate;
 
-    private String businessHours;
-
     private String businessDays;
 
     private String frequency;
 
     private BigDecimal contractValue;
 
-    private String staffUrl;
-
     private String signatureStatus;
 
-    private LocalDate nextDate;
 
     public ContractResponseDto(Contract contract) {
         this.quoteId = contract.getQuote().getId().toString();
         this.contractId = contract.getId().toString();
         this.quote = new QuoteResponseDto(contract.getQuote());
-        this.userId = contract.getUserId();
-        this.serviceLine = contract.getServiceLine();
+        this.clientId = contract.getClientId();
+        this.serviceLine = contract.getServiceType().toString();
         this.startDate = contract.getStartDate();
         this.endDate = contract.getEndDate();
-        this.businessHours = contract.getBusinessHours();
-        this.businessDays = contract.getBusinessDays();
-        this.frequency = contract.getFrequency();
+        this.frequency = contract.getFrequency().toString();
         this.contractValue = contract.getContractValue();
-        this.staffUrl = contract.getStaffUrl();
-        this.signatureStatus = contract.getSignatureStatus();
-        this.nextDate = contract.getNextDate();
-
+        this.signatureStatus = contract.getSignatureStatus().toString();
 
     }
 }

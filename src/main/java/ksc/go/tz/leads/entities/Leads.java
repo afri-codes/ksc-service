@@ -3,6 +3,7 @@ package ksc.go.tz.leads.entities;
 
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.LeadServiceType;
 import ksc.go.tz.enums.LeadSource;
 import ksc.go.tz.enums.LeadStatus;
 import lombok.*;
@@ -30,11 +31,12 @@ public class Leads extends BaseEntity<UUID> {
     @Column(name = "email", unique = false)
     private String email;
 
-    @Column(name = "service_line")
-    private String serviceLine;
-
     @Column(columnDefinition = "TEXT")
     private String message;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "service_type_interest")
+    private LeadServiceType serviceTypeInterest;
 
     @Enumerated(EnumType.STRING)
     private LeadSource source;
