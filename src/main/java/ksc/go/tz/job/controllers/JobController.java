@@ -11,9 +11,7 @@ import ksc.go.tz.job.services.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +28,7 @@ public class JobController {
     // POST /api/v1/jobs
     @Operation(summary = "Create a new job")
     @Permission(name = "Create Job", code = "CREATE_JOB")
+    @PostMapping("/jobs")
     public ApiResponseUtil.ApiResponseEntity<JobResponseDto> createJob(@RequestBody @Valid JobDto jobDto, Authentication authentication) {
         UUID createdBy = authDetailsExtractor.getUserId(authentication);
         return apiResponseUtil.getResponse(null, jobService.createJob(jobDto, createdBy), "Job created successfully", null);
@@ -38,6 +37,7 @@ public class JobController {
     // GET /api/v1/jobs
     @Operation(summary = "Get all jobs")
     @Permission(name = "View All Jobs", code = "VIEW_ALL_JOBS")
+    @GetMapping("/jobs")
     public ApiResponseUtil.ApiResponseEntity<List<JobResponseDto>> getAllJobs(Authentication authentication) {
         return apiResponseUtil.getResponse(jobService.getAllJobs(authentication));
     }
@@ -45,6 +45,7 @@ public class JobController {
     // GET /api/v1/jobs/{id}
     @Operation(summary = "Get job by ID")
     @Permission(name = "View Job By ID", code = "VIEW_JOB_BY_ID")
+    @GetMapping("/jobs/{jobId}")
     public ApiResponseUtil.ApiResponseEntity<JobResponseDto> getJobById(UUID jobId, Authentication authentication) {
         return apiResponseUtil.getResponse(jobService.getJobById(jobId, authentication));
     }
@@ -52,6 +53,7 @@ public class JobController {
     // PUT /api/v1/jobs/{id}
     @Operation(summary = "Update job by ID")
     @Permission(name = "Update Job By ID", code = "UPDATE_JOB_BY_ID")
+    @PutMapping("/jobs/{jobId}")
     public ApiResponseUtil.ApiResponseEntity<JobResponseDto> updateJobById(UUID jobId, @RequestBody @Valid JobDto jobDto, Authentication authentication) {
         return apiResponseUtil.getResponse(null, jobService.updateJobById(jobId, jobDto, authentication), "Job updated successfully", null);
     }
