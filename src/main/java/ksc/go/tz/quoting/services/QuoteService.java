@@ -20,4 +20,8 @@ public interface QuoteService {
     QuoteResponseDto updateSite(String site, QuoteDto quoteDto, UUID userId);
 
     QuoteResponseDto addSite(QuoteDto quoteDto, UUID createdBy);
+
+    QuoteResponseDto acceptQuote(String quoteId, UUID userId);
+
+    QuoteResponseDto sendQuote(String quoteId, UUID userId);
 }

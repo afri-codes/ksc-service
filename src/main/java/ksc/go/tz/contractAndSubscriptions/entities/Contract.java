@@ -56,4 +56,5 @@ public class Contract extends BaseEntity<UUID> {
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
 }

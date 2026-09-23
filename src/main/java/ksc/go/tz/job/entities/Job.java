@@ -44,8 +44,8 @@ public class Job extends BaseEntity<UUID> {
     @JoinColumn(name = "crew_id")
     private Crew crew;
 
-    @Column(name = "service_line")
-    private String serviceLine;
+//    @Column(name = "service_line")
+//    private String serviceLine;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "service_type")

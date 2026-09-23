@@ -1,6 +1,7 @@
 package ksc.go.tz.quoting.services;
 
 import afriUtils.responses.AfriException;
+import ksc.go.tz.enums.QuoteStatus;
 import ksc.go.tz.quoting.dto.QuoteDto;
 import ksc.go.tz.quoting.dto.QuoteResponseDto;
 import ksc.go.tz.quoting.entities.Quote;
@@ -29,6 +30,34 @@ public class QuoteServiceImpl implements QuoteService {
         sites.setCreatedBy(createdBy);
         sites.setCreatedAt(now);
         return new QuoteResponseDto(quoteRepository.save(sites));
+    }
+
+    @Override
+    public QuoteResponseDto acceptQuote(String quoteId, UUID userId) {
+        Optional<Quote> quoteOptional = quoteRepository.findById(UUID.fromString(quoteId));
+        if(quoteOptional.isEmpty()) {
+            throw new AfriException("Quote not found");
+        }
+        quoteOptional.ifPresent(quote -> {
+            quote.setStatus(QuoteStatus.ACCEPTED);
+            quote.setUpdatedAt(LocalDateTime.now());
+            quoteRepository.save(quote);
+        });
+        return new QuoteResponseDto(quoteOptional.get());
+    }
+
+    @Override
+    public QuoteResponseDto sendQuote(String quoteId, UUID userId) {
+        Optional<Quote> quoteOptional = quoteRepository.findById(UUID.fromString(quoteId));
+        if(quoteOptional.isEmpty()) {
+            throw new AfriException("Quote not found");
+        }
+        quoteOptional.ifPresent(quote -> {
+            quote.setStatus(QuoteStatus.SENT);
+            quote.setUpdatedAt(LocalDateTime.now());
+            quoteRepository.save(quote);
+        });
+        return new QuoteResponseDto(quoteOptional.get());
     }
 
     @Override

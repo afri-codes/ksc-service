@@ -1,5 +1,10 @@
 package ksc.go.tz.contractAndSubscriptions.dto;
 
+import jakarta.persistence.*;
+import ksc.go.tz.enums.Frequency;
+import ksc.go.tz.enums.LeadServiceType;
+import ksc.go.tz.enums.SignatureStatus;
+import ksc.go.tz.quoting.entities.Quote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,17 +29,21 @@ public class ContractDto {
 
     private LocalDate endDate;
 
-    private String businessHours;
-
-    private String businessDays;
-
     private String frequency;
 
     private BigDecimal contractValue;
 
-    private String staffUrl;
-
     private String signatureStatus;
 
     private LocalDate nextDate;
+
+    private String  clientId;
+
+    private String businessInfo;
+
+    private String personalIdNo;
+
+    private LocalDate paidAt;
+
+
 }

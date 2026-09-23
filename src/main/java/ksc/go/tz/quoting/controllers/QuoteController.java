@@ -63,8 +63,24 @@ public class QuoteController {
 
 
     // POST /api/v1/quotes/{id}/send
+    @Operation(summary = "Send quote")
+    @Permission(name="SEND QUOTE", code = "SEND_QUOTE")
+    @PostMapping("/quotes/{id}/send")
+    public ApiResponseUtil.ApiResponseEntity<QuoteResponseDto> sendQuote(@PathVariable("id") String quoteId, Authentication authentication) {
+        UUID userId = authDetailsExtractor.getUserId(authentication);
+        QuoteResponseDto sentQuote = quoteService.sendQuote(quoteId, userId);
+        return apiResponseUtil.getResponse(null, sentQuote, "Quote sent successfully", ResponseEnum.SUCCESS);
+    }
 
     // POST /api/v1/quotes/{id}/accept
+    @Operation(summary = "Accept quote")
+    @Permission(name="ACCEPT QUOTE", code = "ACCEPT_QUOTE")
+    @PostMapping("/quotes/{id}/accept")
+    public ApiResponseUtil.ApiResponseEntity<QuoteResponseDto> acceptQuote(@PathVariable("id") String quoteId, Authentication authentication) {
+        UUID userId = authDetailsExtractor.getUserId(authentication);
+        QuoteResponseDto acceptedQuote = quoteService.acceptQuote(quoteId, userId);
+        return apiResponseUtil.getResponse(null, acceptedQuote, "Quote accepted successfully", ResponseEnum.SUCCESS);
+    }
 
     // GET /api/v1/quotes/{id}/pdf
 

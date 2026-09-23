@@ -22,10 +22,13 @@ public class Crew extends BaseEntity<UUID> {
     @Column(name = "crew_name", nullable = false)
     private String crewName;
 
-    @Column(name = "supervisorId")
-    private String supervisor;
+    @Column(name = "supervisor_id")
+    private String supervisorId;
 
-    @Column(name = "decision_score")
-    private String decisionScore;
+    @Column(name = "supervisor_name")
+    private String supervisorName;
+
+    @Column(name = "zone_name")
+    private String zone;
 
 }
