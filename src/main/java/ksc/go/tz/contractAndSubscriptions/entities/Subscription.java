@@ -27,10 +27,12 @@ public class Subscription extends BaseEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
 
-    private String recurrence;
+    private String recurrence;  //enum
 
-    @Column(name = "cycle_size")
-    private Integer cycleSize;
+    private String shiftPreference;  //enum
+
+    @Column(name = "crew_size")
+    private Integer crewSize;
 
     @Column(name = "price_per_cycle")
     private BigDecimal pricePerCycle;

@@ -36,11 +36,22 @@ public class ContractResponseDto {
 
     private BigDecimal contractValue;
 
+    private String businessInfo;
+
+    private String businessBrelaNo;
+
+    private String personalIdNo;
+
     private String signatureStatus;
 
+    private String pdfUrl;
 
     public ContractResponseDto(Contract contract) {
         this.quoteId = contract.getQuote().getId().toString();
+        this.businessInfo = contract.getBusinessInfo();
+        this.businessBrelaNo = contract.getBusinessBrelaNo();
+        this.personalIdNo = contract.getPersonalIdNo();
+        this.pdfUrl = contract.getPdfUrl();
         this.contractId = contract.getId().toString();
         this.quote = new QuoteResponseDto(contract.getQuote());
         this.clientId = contract.getClientId();

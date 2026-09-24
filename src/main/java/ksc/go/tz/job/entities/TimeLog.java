@@ -2,6 +2,8 @@ package ksc.go.tz.job.entities;
 
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.LeadServiceType;
+import ksc.go.tz.enums.TimeLogStatus;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -17,7 +19,6 @@ import java.util.UUID;
 @Setter
 @Where(clause = " deleted_at is null")
 public class TimeLog extends BaseEntity<UUID> {
-
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "job_id", nullable = false)
@@ -37,4 +38,13 @@ public class TimeLog extends BaseEntity<UUID> {
 
     @Column(name = "geofence_zone_out")
     private String geofenceZoneOut;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "clock_in_status", nullable = false)
+    private TimeLogStatus clockInStatus;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "clock_out_status", nullable = true)
+    private TimeLogStatus clockOutStatus;
 }

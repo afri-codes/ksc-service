@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +22,7 @@ public class SubscriptionResponseDto {
 
     private String recurrence;
 
-    private Integer cycleSize;
+    private Integer crewSize;
 
     private BigDecimal pricePerCycle;
 
@@ -35,7 +34,7 @@ public class SubscriptionResponseDto {
         this.contract = new ContractResponseDto(subscription.getContract());
         this.status = subscription.getStatus().toString();
         this.recurrence = subscription.getRecurrence();
-        this.cycleSize = subscription.getCycleSize();
+        this.crewSize = subscription.getCrewSize();
         this.pricePerCycle = subscription.getPricePerCycle();
         this.nextRunDate = subscription.getNextRunDate();
     }

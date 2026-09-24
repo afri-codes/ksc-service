@@ -36,6 +36,12 @@ public class Contract extends BaseEntity<UUID> {
     @Column(name = "business_info")
     private String businessInfo;
 
+    @Column(name = "business_tin")
+    private String businessTin;
+
+    @Column(name = "business_brela_no")
+    private String businessBrelaNo;
+
     @Column(name = "personal_id_no")
     private String personalIdNo;
 
@@ -47,6 +53,9 @@ public class Contract extends BaseEntity<UUID> {
 
     @Column(name = "contract_value")
     private BigDecimal contractValue;
+
+    @Column(name = "pdf_url", nullable = false)
+    private String pdfUrl;
 
     @Column(name = "paid_at")
     private LocalDate paidAt;

@@ -8,7 +8,6 @@ import ksc.go.tz.contractAndSubscriptions.repository.SubscriptionRepository;
 import ksc.go.tz.enums.JobStatus;
 import ksc.go.tz.enums.JobType;
 import ksc.go.tz.enums.LeadServiceType;
-import ksc.go.tz.enums.SubscriptionStatus;
 import ksc.go.tz.job.dto.JobDto;
 import ksc.go.tz.job.dto.JobResponseDto;
 import ksc.go.tz.job.entities.Crew;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

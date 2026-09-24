@@ -1,11 +1,7 @@
 package ksc.go.tz.contractAndSubscriptions.services;
-
-
 import ksc.go.tz.contractAndSubscriptions.dto.ContractDto;
 import ksc.go.tz.contractAndSubscriptions.dto.ContractResponseDto;
-import ksc.go.tz.contractAndSubscriptions.dto.SubscriptionResponseDto;
 import org.springframework.data.domain.Page;
-
 import java.util.List;
 import java.util.UUID;
 

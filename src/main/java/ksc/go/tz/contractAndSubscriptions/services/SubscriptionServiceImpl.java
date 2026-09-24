@@ -10,7 +10,6 @@ import ksc.go.tz.enums.SubscriptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,6 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscription.setStatus(SubscriptionStatus.valueOf(subscriptionDto.getStatus()));
         subscription.setRecurrence(subscriptionDto.getRecurrence());
         subscription.setNextRunDate(subscriptionDto.getNextRunDate());
+        subscription.setCrewSize(subscriptionDto.getCrewSize());
         subscription.setCreatedBy(createdBy);
         return null;
     }
