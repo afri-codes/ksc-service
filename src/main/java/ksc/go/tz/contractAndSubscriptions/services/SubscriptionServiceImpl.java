@@ -34,7 +34,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscription.setNextRunDate(subscriptionDto.getNextRunDate());
         subscription.setCrewSize(subscriptionDto.getCrewSize());
         subscription.setCreatedBy(createdBy);
-        return null;
+        return new SubscriptionResponseDto(subscriptionRepository.save(subscription));
     }
 
     @Override
