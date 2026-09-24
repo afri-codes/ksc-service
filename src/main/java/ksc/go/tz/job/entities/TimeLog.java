@@ -18,19 +18,23 @@ import java.util.UUID;
 @Where(clause = " deleted_at is null")
 public class TimeLog extends BaseEntity<UUID> {
 
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
     @Column(name = "staff_id", nullable = false)
-    private String staffId;
+    private UUID staffId;
 
-    @Column(name = "clock_in")
+    @Column(name = "clock_in", nullable = false)
     private LocalDateTime clockIn;
 
     @Column(name = "clock_out")
     private LocalDateTime clockOut;
 
-    @Column(name = "geofence_zone")
-    private String geofenceZone;
+    @Column(name = "geofence_zone_in")
+    private String geofenceZoneIn;
+
+    @Column(name = "geofence_zone_out")
+    private String geofenceZoneOut;
 }

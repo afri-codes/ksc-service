@@ -1,18 +1,18 @@
 package ksc.go.tz.job.dto;
 
+
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Getter
 @Setter
-public class TimeLogDto  {
+public class JobCheckListDto {
 
     private String jobId;
-    private String staffId;
-    private String geofenceZone;
+
+    private String templateName;
 
 }

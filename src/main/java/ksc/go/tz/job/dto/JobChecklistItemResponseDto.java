@@ -1,7 +1,7 @@
 package ksc.go.tz.job.dto;
 
 
-import ksc.go.tz.job.entities.ChecklistItem;
+import ksc.go.tz.job.entities.JobChecklistItem;
 import lombok.*;
 
 
@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class ChecklistItemResponseDto {
+public class JobChecklistItemResponseDto {
 
 
     private String checklistId;
@@ -21,7 +21,7 @@ public class ChecklistItemResponseDto {
 
     private String notes;
 
-    public ChecklistItemResponseDto(ChecklistItem checklistItem) {
+    public JobChecklistItemResponseDto(JobChecklistItem checklistItem) {
         this.checklistId = checklistItem.getId().toString();
         this.taskLabel = checklistItem.getTaskLabel();
         this.complete = checklistItem.getComplete();

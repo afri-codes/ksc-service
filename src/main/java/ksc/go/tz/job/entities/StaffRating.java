@@ -25,7 +25,7 @@ public class StaffRating extends BaseEntity<UUID> {
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;
 
-    @Column(name = "staffId", nullable = false)
+    @Column(name = "staff_Id", nullable = false)
     private String staff;
 
     @Column(nullable = false)

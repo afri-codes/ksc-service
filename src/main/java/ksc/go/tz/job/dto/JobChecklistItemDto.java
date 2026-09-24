@@ -9,8 +9,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class ChecklistItemDto  {
-
+public class JobChecklistItemDto {
 
     private String checklistId;
 

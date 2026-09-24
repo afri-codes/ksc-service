@@ -24,14 +24,17 @@ public class TimeLogResponseDto {
 
     private LocalDateTime clockOut;
 
-    private String geofenceZone;
+    private String geofenceZoneIn;
+
+    private String geofenceZoneOut;
 
     public TimeLogResponseDto(TimeLog timeLog) {
         this.timeLogId = timeLog.getId().toString();
         this.job = new JobResponseDto(timeLog.getJob());
-        this.staffId = timeLog.getStaffId();
+        this.staffId = timeLog.getStaffId().toString();
         this.clockIn = timeLog.getClockIn();
         this.clockOut = timeLog.getClockOut();
-        this.geofenceZone = timeLog.getGeofenceZone();
+        this.geofenceZoneIn = timeLog.getGeofenceZoneIn();
+        this.geofenceZoneOut = timeLog.getGeofenceZoneOut();
     }
 }

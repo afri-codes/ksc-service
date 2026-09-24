@@ -16,16 +16,16 @@ import java.util.UUID;
 @Getter
 @Setter
 @Where(clause = " deleted_at is null")
-public class ChecklistItem extends BaseEntity<UUID> {
+public class JobChecklistItem extends BaseEntity<UUID> {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "checklist_id", nullable = false)
-    private JobChecklist checklist;
+    private JobCheckList checklist;
 
     @Column(name = "task_label", nullable = false)
     private String taskLabel;
 
-    @Column(name = "is_complete")
+    @Column(name = "is_complete", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean complete;
 
     @Column(columnDefinition = "TEXT")

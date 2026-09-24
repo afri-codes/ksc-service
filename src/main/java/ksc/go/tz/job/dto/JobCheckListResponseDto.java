@@ -1,13 +1,13 @@
 package ksc.go.tz.job.dto;
 
-import ksc.go.tz.job.entities.JobChecklist;
+import ksc.go.tz.job.entities.JobCheckList;
 import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Getter
 @Setter
-public class JobChecklistResponseDto {
+public class JobCheckListResponseDto {
 
     private String jobId;
 
@@ -15,7 +15,7 @@ public class JobChecklistResponseDto {
 
     private String templateName;
 
-    public JobChecklistResponseDto(JobChecklist jobChecklist) {
+    public JobCheckListResponseDto(JobCheckList jobChecklist) {
       this.jobId = jobChecklist.getId().toString();
       this.job = new JobResponseDto(jobChecklist.getJob());
       this.templateName = jobChecklist.getTemplateName();

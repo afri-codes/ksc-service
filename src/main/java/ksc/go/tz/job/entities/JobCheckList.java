@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Where(clause = " deleted_at is null")
-public class JobChecklist extends BaseEntity<UUID> {
+public class JobCheckList extends BaseEntity<UUID> {
 
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
