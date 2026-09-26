@@ -37,6 +37,12 @@ public class Sites extends BaseEntity<UUID> {
     @Column(name = "plot_coordinates", columnDefinition = "jsonb")
     private String plotCoordinates;
 
+    @Column(name = "longitude",nullable = false)
+    private String longitude;
+
+    @Column(name = "latitude",nullable = false)
+    private String latitude;
+
     @Column(name = "is_secured")
     private Boolean secured;
 

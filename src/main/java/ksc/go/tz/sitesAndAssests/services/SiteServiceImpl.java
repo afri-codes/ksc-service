@@ -29,7 +29,9 @@ public class SiteServiceImpl implements SiteService {
         sites.setAreaSqm(siteDto.getAreaSqm());
         sites.setRoomCount(siteDto.getRoomCount());
         sites.setAddressArea(siteDto.getAddressArea());
-        sites.setPlotCoordinates(siteDto.getPlotCoordinates());
+//        sites.setPlotCoordinates(siteDto.getPlotCoordinates());
+        sites.setLatitude(siteDto.getLatitude());
+        sites.setLongitude(siteDto.getLongitude());
         sites.setSecured(siteDto.getSecured());
         sites.setAccessType(siteDto.getAccessType());
         sites.setCreatedBy(createdBy);
@@ -71,7 +73,9 @@ public class SiteServiceImpl implements SiteService {
         existingSite.setAreaSqm(siteDto.getAreaSqm());
         existingSite.setRoomCount(siteDto.getRoomCount());
         existingSite.setAddressArea(siteDto.getAddressArea());
-        existingSite.setPlotCoordinates(siteDto.getPlotCoordinates());
+//        existingSite.setPlotCoordinates(siteDto.getPlotCoordinates());
+        existingSite.setLatitude(siteDto.getLatitude());
+        existingSite.setLongitude(siteDto.getLongitude());
         existingSite.setSecured(siteDto.getSecured());
         existingSite.setAccessType(siteDto.getAccessType());
         existingSite.setUpdatedBy(userId);
