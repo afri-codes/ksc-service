@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import ksc.go.tz.contractAndSubscriptions.dto.ContractDto;
 import ksc.go.tz.contractAndSubscriptions.dto.ContractResponseDto;
 import ksc.go.tz.contractAndSubscriptions.services.ContractService;
-import ksc.go.tz.leads.dto.LeadsResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +35,6 @@ public class ContractController {
         return apiResponseUtil.getResponse(null, contractService.addContract(contractDto, createdBy), "Contract added successfully", null);
     }
 
-    // GET /api/v1/contracts with pagination, sorting and filtering by status, source and service line
     @Operation(summary = "Get all contracts with pagination, sorting and filtering by status, source and service line")
     @Permission(name = "VIEW ALL CONTRACTS", code = "VIEW_CONTRACTS")
     @GetMapping("/contracts/pagination")

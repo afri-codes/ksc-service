@@ -47,7 +47,7 @@ public class FileController {
                                                        @RequestParam("description") String description,
                                                        @RequestParam("documentType") DocumentType documentType,Authentication authentication) {
         try {
-            Upload uploadedFile = fileService.uploadFileBase64(base64Data, description, documentType);
+            Upload uploadedFile = fileService.uploadFileBase64(base64Data, description, documentType, authentication);
             return apiResponseUtil.getResponse(uploadedFile, ResponseEnum.SUCCESS);
         } catch (Exception e) {
             throw new AfriException(e.getMessage());
@@ -55,9 +55,9 @@ public class FileController {
     }
 
     @PostMapping("/uploads/base64")
-    public ResponseEntity<?> uploadFileBase64(@RequestBody  @Valid FileUpload upload) {
+    public ResponseEntity<?> uploadFileBase64(@RequestBody  @Valid FileUpload upload, Authentication authentication) {
         try {
-            Upload uploadedFile = fileService.uploadFileBase64(upload.getBase64File(), "portalDocs", DocumentType.CONTRACT);
+            Upload uploadedFile = fileService.uploadFileBase64(upload.getBase64File(), upload.getDescription(), upload.getDocumentType(), authentication);
             return apiResponseUtil.getResponse(uploadedFile, ResponseEnum.SUCCESS);
         } catch (Exception e) {
             throw new AfriException(e.getMessage());

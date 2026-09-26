@@ -1,5 +1,6 @@
 package ksc.go.tz.DocumentManagement.services;
 
+import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.responses.AfriException;
 import ksc.go.tz.DocumentManagement.dto.FileDownload;
 import ksc.go.tz.DocumentManagement.dto.FileMetaData;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class FileServiceImpl implements FileService {
+    private final AuthDetailsExtractor authDetailsExtractor;
     private final UploadRepository uploadRepository;
     private final DocumentTypeFolderConfig documentTypeFolderConfig;
     @Value("${file.upload-dir}")
@@ -51,40 +54,21 @@ public class FileServiceImpl implements FileService {
         fileExtenstionsMap.put("text/plain", "txt");
     }
 
+
     @Override
-    @Transactional
-    public Upload uploadFileBase64(String base64Data, String fileDescription, DocumentType documentType) {
-
-
-            Upload existingUpload = null;
-            log.info("Existing upload for employee {}: {}", existingUpload != null ? existingUpload.getFileName() : "None");
-            if (existingUpload != null) {
-                log.info("Deleting existing upload for employee {}: {}", existingUpload.getFileName());
-                String existingFilePath = getFolder(existingUpload.getFileType()) + "/" + existingUpload.getFileName();
-                File existingFile = new File(existingFilePath);
-                if (existingFile.exists()) {
-                    if (existingFile.delete()) {
-                        log.info("Deleted existing file: {}", existingFilePath);
-                    } else {
-                        log.warn("Failed to delete existing file: {}", existingFilePath);
-                    }
-                }
-                uploadRepository.delete(existingUpload);
-            }
-
-            byte[] data = Base64.getDecoder().decode(base64Data);
-            String savedFileName = saveFileToDisks(data, documentType);
-            Upload upload = new Upload();
-            upload.setFileName(savedFileName);
-            upload.setFileDescription(fileDescription);
-            upload.setFileType(documentType);
-//            upload.setCheckNumber(employee.get().getCheckNumber());
-            upload.setCreatedBy(null);
-            upload.setCreatedAt(LocalDateTime.now());
-            var savedUpload=  uploadRepository.save(upload);
-
-            return savedUpload;
-
+    public Upload uploadFileBase64(String base64Data, String fileDescription, DocumentType documentType, Authentication authentication) {
+        UUID userId = authDetailsExtractor.getUserId(authentication);
+        log.info("Uploading file for user: {}, documentType: {}, description: {}", userId, documentType, fileDescription);
+        log.info("Base64 {}", base64Data.substring(0, 15));
+        byte[] data = Base64.getDecoder().decode(base64Data);
+        String savedFileName = saveFileToDisk(data, documentType);
+        Upload fileEntity = new Upload();
+        fileEntity.setId(UUID.randomUUID());
+        fileEntity.setFileDescription(fileDescription);
+        fileEntity.setFileName(savedFileName);
+        fileEntity.setFileType(documentType);
+        fileEntity.setCreatedBy(userId);
+        return uploadRepository.save(fileEntity);
     }
 
     private String saveFileToDisks(byte[] data, DocumentType documentType) {
