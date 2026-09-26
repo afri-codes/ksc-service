@@ -4,6 +4,7 @@ import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.responses.AfriException;
 import ksc.go.tz.DocumentManagement.dto.FileDownload;
 import ksc.go.tz.DocumentManagement.dto.FileMetaData;
+import ksc.go.tz.DocumentManagement.dto.FileUploadResponse;
 import ksc.go.tz.DocumentManagement.entities.Upload;
 import ksc.go.tz.DocumentManagement.repositories.UploadRepository;
 import ksc.go.tz.DocumentManagement.services.utils.Utils;
@@ -16,7 +17,6 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -56,7 +55,7 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public Upload uploadFileBase64(String base64Data, String fileDescription, DocumentType documentType, Authentication authentication) {
+    public FileUploadResponse uploadFileBase64(String base64Data, String fileDescription, DocumentType documentType, Authentication authentication) {
         UUID userId = authDetailsExtractor.getUserId(authentication);
         log.info("Uploading file for user: {}, documentType: {}, description: {}", userId, documentType, fileDescription);
         log.info("Base64 {}", base64Data.substring(0, 15));
@@ -68,7 +67,7 @@ public class FileServiceImpl implements FileService {
         fileEntity.setFileName(savedFileName);
         fileEntity.setFileType(documentType);
         fileEntity.setCreatedBy(userId);
-        return uploadRepository.save(fileEntity);
+        return new FileUploadResponse(uploadRepository.save(fileEntity));
     }
 
     private String saveFileToDisks(byte[] data, DocumentType documentType) {

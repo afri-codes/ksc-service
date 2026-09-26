@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import ksc.go.tz.DocumentManagement.dto.FileDownload;
 import ksc.go.tz.DocumentManagement.dto.FileMetaData;
 import ksc.go.tz.DocumentManagement.dto.FileUpload;
+import ksc.go.tz.DocumentManagement.dto.FileUploadResponse;
 import ksc.go.tz.DocumentManagement.entities.Upload;
 import ksc.go.tz.DocumentManagement.services.FileService;
 import ksc.go.tz.enums.DocumentType;
@@ -43,11 +44,11 @@ public class FileController {
     }
 
     @PostMapping("/uploads/base64/multipart")
-    public ResponseEntity<?> uploadFileBase64Multipart(@RequestParam("base64File") String base64Data,
-                                                       @RequestParam("description") String description,
-                                                       @RequestParam("documentType") DocumentType documentType,Authentication authentication) {
+    public ApiResponseUtil.ApiResponseEntity<FileUploadResponse> uploadFileBase64Multipart(@RequestParam("base64File") String base64Data,
+                                                                        @RequestParam("description") String description,
+                                                                        @RequestParam("documentType") DocumentType documentType, Authentication authentication) {
         try {
-            Upload uploadedFile = fileService.uploadFileBase64(base64Data, description, documentType, authentication);
+            FileUploadResponse uploadedFile = fileService.uploadFileBase64(base64Data, description, documentType, authentication);
             return apiResponseUtil.getResponse(uploadedFile, ResponseEnum.SUCCESS);
         } catch (Exception e) {
             throw new AfriException(e.getMessage());
@@ -55,9 +56,9 @@ public class FileController {
     }
 
     @PostMapping("/uploads/base64")
-    public ResponseEntity<?> uploadFileBase64(@RequestBody  @Valid FileUpload upload, Authentication authentication) {
+    public ApiResponseUtil.ApiResponseEntity<FileUploadResponse> uploadFileBase64(@RequestBody  @Valid FileUpload upload, Authentication authentication) {
         try {
-            Upload uploadedFile = fileService.uploadFileBase64(upload.getBase64File(), upload.getDescription(), upload.getDocumentType(), authentication);
+            FileUploadResponse uploadedFile = fileService.uploadFileBase64(upload.getBase64File(), upload.getDescription(), upload.getDocumentType(), authentication);
             return apiResponseUtil.getResponse(uploadedFile, ResponseEnum.SUCCESS);
         } catch (Exception e) {
             throw new AfriException(e.getMessage());
