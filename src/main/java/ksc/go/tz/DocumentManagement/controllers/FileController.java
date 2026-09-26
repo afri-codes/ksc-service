@@ -1,7 +1,6 @@
 package ksc.go.tz.DocumentManagement.controllers;
 
 import afriSecurity.security.AuthDetailsExtractor;
-import afriUtils.enums.DocumentType;
 import afriUtils.enums.ResponseEnum;
 import afriUtils.responses.AfriException;
 import afriUtils.responses.ApiResponseUtil;
@@ -11,6 +10,7 @@ import ksc.go.tz.DocumentManagement.dto.FileMetaData;
 import ksc.go.tz.DocumentManagement.dto.FileUpload;
 import ksc.go.tz.DocumentManagement.entities.Upload;
 import ksc.go.tz.DocumentManagement.services.FileService;
+import ksc.go.tz.enums.DocumentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

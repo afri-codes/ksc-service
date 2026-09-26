@@ -1,8 +1,8 @@
 package ksc.go.tz.DocumentManagement.entities;
 
-import afriUtils.enums.DocumentType;
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.DocumentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

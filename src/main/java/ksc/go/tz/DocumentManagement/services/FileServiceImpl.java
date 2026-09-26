@@ -1,6 +1,5 @@
 package ksc.go.tz.DocumentManagement.services;
 
-import afriUtils.enums.DocumentType;
 import afriUtils.responses.AfriException;
 import ksc.go.tz.DocumentManagement.dto.FileDownload;
 import ksc.go.tz.DocumentManagement.dto.FileMetaData;
@@ -8,6 +7,7 @@ import ksc.go.tz.DocumentManagement.entities.Upload;
 import ksc.go.tz.DocumentManagement.repositories.UploadRepository;
 import ksc.go.tz.DocumentManagement.services.utils.Utils;
 import ksc.go.tz.common.configs.DocumentTypeFolderConfig;
+import ksc.go.tz.enums.DocumentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;

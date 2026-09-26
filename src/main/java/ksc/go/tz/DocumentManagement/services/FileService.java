@@ -1,10 +1,11 @@
 package ksc.go.tz.DocumentManagement.services;
 
 
-import afriUtils.enums.DocumentType;
+
 import ksc.go.tz.DocumentManagement.dto.FileDownload;
 import ksc.go.tz.DocumentManagement.dto.FileMetaData;
 import ksc.go.tz.DocumentManagement.entities.Upload;
+import ksc.go.tz.enums.DocumentType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
