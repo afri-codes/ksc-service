@@ -51,7 +51,7 @@ public class TimeLogServiceImpl implements TimeLogService {
         }
 
         String userGeofenceZone = timeLogRequest.getGeofenceZone();
-        String jobPlotCoordinates = site.getPlotCoordinates();
+        String jobPlotCoordinates = site.getPlotCoordinates().toString();
 
         if (userGeofenceZone == null || userGeofenceZone.trim().isEmpty()) {
             throw new AfriException("User geofence coordinates are required");
@@ -123,7 +123,7 @@ public class TimeLogServiceImpl implements TimeLogService {
         }
 
         String userGeofenceZone = timeLogRequest.getGeofenceZone();
-        String jobPlotCoordinates = site.getPlotCoordinates();
+        String jobPlotCoordinates = site.getPlotCoordinates().toString();
 
         if (userGeofenceZone == null || userGeofenceZone.trim().isEmpty()) {
             throw new AfriException("User geofence coordinates are required");

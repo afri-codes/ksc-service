@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,12 +27,16 @@ public class SiteServiceImpl implements SiteService {
         sites.setAreaSqm(siteDto.getAreaSqm());
         sites.setRoomCount(siteDto.getRoomCount());
         sites.setAddressArea(siteDto.getAddressArea());
-//        sites.setPlotCoordinates(siteDto.getPlotCoordinates());
         sites.setLatitude(siteDto.getLatitude());
         sites.setLongitude(siteDto.getLongitude());
+        Map<String, Object> plotCoordinates = new HashMap<>();
+        plotCoordinates.put("latitude", Double.valueOf(siteDto.getLatitude()));
+        plotCoordinates.put("longitude", Double.valueOf(siteDto.getLongitude()));
+        sites.setPlotCoordinates(plotCoordinates);
         sites.setSecured(siteDto.getSecured());
         sites.setAccessType(siteDto.getAccessType());
         sites.setCreatedBy(createdBy);
+        sites.setSite_owner(String.valueOf(createdBy.toString()));
         sites.setCreatedAt(now);
         return new SiteResponseDto(siteRepository.save(sites));
     }

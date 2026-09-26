@@ -49,6 +49,17 @@ public class SiteController {
 
     }
 
+    @Operation(summary = "get site by id ")
+    @Permission(name="VIEW SITE BY ID", code = "VIEW_SITE_BY_ID")
+    @GetMapping("/sites/{id}")
+    public ApiResponseUtil.ApiResponseEntity<SiteResponseDto> getById(@PathVariable("id") String siteId){
+        Optional<SiteResponseDto> site = siteService.getById(siteId);
+        if (site.isEmpty()) {
+            return apiResponseUtil.getResponse(null, null, "Site not found", ResponseEnum.NOT_FOUND);
+        }
+        return apiResponseUtil.getResponse(site.get());
+    }
+
     @Operation(summary = "update site ")
     @Permission(name="UPDATE SITE", code = "UPDATE_SITE")
     @PutMapping("/sites/{id}")

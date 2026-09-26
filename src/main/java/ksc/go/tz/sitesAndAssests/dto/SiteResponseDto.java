@@ -42,7 +42,7 @@ public class SiteResponseDto {
         this.latitude = sites.getLatitude();
         this.roomCount = sites.getRoomCount();
         this.addressArea = sites.getAddressArea();
-        this.plotCoordinates = sites.getPlotCoordinates();
+        this.plotCoordinates = sites.getPlotCoordinates().toString();
         this.secured = sites.getSecured();
         this.accessType = sites.getAccessType();
     }
