@@ -6,9 +6,12 @@ import ksc.go.tz.quoting.dto.QuoteDto;
 import ksc.go.tz.quoting.dto.QuoteResponseDto;
 import ksc.go.tz.quoting.entities.Quote;
 import ksc.go.tz.quoting.repository.QuoteRepository;
+import ksc.go.tz.sitesAndAssests.entities.Sites;
+import ksc.go.tz.sitesAndAssests.repository.SiteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,18 +21,35 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class QuoteServiceImpl implements QuoteService {
 
     private final QuoteRepository quoteRepository;
+    private final SiteRepository siteRepository;
 
     @Override
     public QuoteResponseDto addSite(QuoteDto quoteDto, UUID createdBy) {
         LocalDateTime now = LocalDateTime.now();
-        Quote sites = new Quote();
-
-        sites.setCreatedBy(createdBy);
-        sites.setCreatedAt(now);
-        return new QuoteResponseDto(quoteRepository.save(sites));
+        Optional<Sites> siteOptional = siteRepository.findById(UUID.fromString(quoteDto.getSiteId()));
+        if (siteOptional.isEmpty()) {
+            throw new AfriException("Site not found");
+        }
+        Quote quote = new Quote();
+        quote.setSite(siteOptional.get());
+        quote.setServiceType(quoteDto.getServiceLine());
+        quote.setClientTier(quoteDto.getClientTier());
+        quote.setHourlyRate(quoteDto.getHourlyRate());
+        quote.setEstimatedHours(quoteDto.getEstimatedHours());
+        quote.setStatus(QuoteStatus.valueOf(quoteDto.getStatus()));
+        quote.setAreaSqm(quoteDto.getAreaSqm());
+        quote.setFrequency(quoteDto.getFrequency());
+        quote.setValidUntil(quoteDto.getValidUntil());
+        quote.setPriceMax(quoteDto.getPriceMax());
+        quote.setPriceMin(quoteDto.getPriceMin());
+        quote.setRequestedBy(createdBy.toString());
+        quote.setCreatedBy(createdBy);
+        quote.setCreatedAt(now);
+        return new QuoteResponseDto(quoteRepository.save(quote));
     }
 
     @Override
@@ -91,6 +111,15 @@ public class QuoteServiceImpl implements QuoteService {
                 .orElseThrow(() -> new AfriException("Site not found"));
 
         existingSite.setUpdatedBy(userId);
+        existingSite.setServiceType(quoteDto.getServiceLine());
+        existingSite.setClientTier(quoteDto.getClientTier());
+        existingSite.setHourlyRate(quoteDto.getHourlyRate());
+        existingSite.setEstimatedHours(quoteDto.getEstimatedHours());
+        existingSite.setPriceMin(quoteDto.getPriceMin());
+        existingSite.setPriceMax(quoteDto.getPriceMax());
+        existingSite.setValidUntil(quoteDto.getValidUntil());
+        existingSite.setFrequency(quoteDto.getFrequency());
+        existingSite.setAreaSqm(quoteDto.getAreaSqm());
         existingSite.setUpdatedAt(LocalDateTime.now());
 
         Quote updatedSite = quoteRepository.save(existingSite);

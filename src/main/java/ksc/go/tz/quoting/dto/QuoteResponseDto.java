@@ -1,5 +1,6 @@
 package ksc.go.tz.quoting.dto;
 
+import ksc.go.tz.enums.Frequency;
 import ksc.go.tz.enums.LeadServiceType;
 import ksc.go.tz.quoting.entities.Quote;
 import ksc.go.tz.sitesAndAssests.dto.SiteResponseDto;
@@ -39,6 +40,11 @@ public class QuoteResponseDto {
 
     private String status;
 
+    private Frequency frequency;
+
+    private BigDecimal areaSqm;
+
+
     public QuoteResponseDto(Quote quote) {
         this.siteId = quote.getSite().getId().toString();
         this.quoteId = quote.getId().toString();
@@ -51,6 +57,8 @@ public class QuoteResponseDto {
         this.priceMax = quote.getPriceMax();
         this.validUntil = quote.getValidUntil();
         this.status = quote.getStatus().toString();
+        this.frequency = quote.getFrequency();
+        this.areaSqm = quote.getAreaSqm();
 
     }
 }
