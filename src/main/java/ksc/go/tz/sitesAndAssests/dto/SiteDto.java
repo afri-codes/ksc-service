@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -38,4 +41,9 @@ public class SiteDto {
     private Boolean secured;
 
     private String accessType;
+
+    @NotBlank(message = "Cleaning depth must be provided")
+    private String cleaningDepthId;
+
+    private List<String> addOnIds = new ArrayList<>();
 }

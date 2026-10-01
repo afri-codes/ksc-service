@@ -1,7 +1,9 @@
 package ksc.go.tz.sitesAndAssests.services;
 
 import afriUtils.responses.AfriException;
-
+import ksc.go.tz.masterData.entities.AddOn;
+import ksc.go.tz.masterData.entities.CleaningDepth;
+import ksc.go.tz.masterData.services.PricingItemResolver;
 import ksc.go.tz.sitesAndAssests.dto.SiteDto;
 import ksc.go.tz.sitesAndAssests.dto.SiteResponseDto;
 import ksc.go.tz.sitesAndAssests.entities.Sites;
@@ -21,6 +23,7 @@ import java.util.*;
 public class SiteServiceImpl implements SiteService {
 
     private final SiteRepository siteRepository;
+    private final PricingItemResolver pricingItemResolver;
 
     @Override
     public SiteResponseDto addSite(SiteDto siteDto, UUID createdBy) {
@@ -38,6 +41,7 @@ public class SiteServiceImpl implements SiteService {
         sites.setPlotCoordinates(plotCoordinates);
         sites.setSecured(siteDto.getSecured());
         sites.setAccessType(siteDto.getAccessType());
+        applyPricing(sites, siteDto);
         sites.setCreatedBy(createdBy);
         sites.setSite_owner(String.valueOf(createdBy.toString()));
         sites.setCreatedAt(now);
@@ -83,6 +87,7 @@ public class SiteServiceImpl implements SiteService {
         existingSite.setLongitude(siteDto.getLongitude());
         existingSite.setSecured(siteDto.getSecured());
         existingSite.setAccessType(siteDto.getAccessType());
+        applyPricing(existingSite, siteDto);
         existingSite.setUpdatedBy(userId);
         existingSite.setUpdatedAt(LocalDateTime.now());
 
@@ -103,6 +108,12 @@ public class SiteServiceImpl implements SiteService {
         }
     }
 
-
+    private void applyPricing(Sites site, SiteDto siteDto) {
+        CleaningDepth cleaningDepth = pricingItemResolver.resolveCleaningDepth(siteDto.getCleaningDepthId());
+        Set<AddOn> addOns = pricingItemResolver.resolveAddOns(siteDto.getAddOnIds());
+        site.setCleaningDepth(cleaningDepth);
+        site.setAddOns(addOns);
+        site.setTotalPrice(pricingItemResolver.totalPrice(cleaningDepth, addOns));
+    }
 
 }
