@@ -9,17 +9,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ServiceSeeder implements CommandLineRunner {
 
-    private static final List<String> SERVICE_NAMES = List.of(
-            "Cleaning",
-            "Fumigation",
-            "Property Management"
+    private record SeedItem(String name, BigDecimal price) {
+    }
+
+    // Fixed prices in TZS (placeholders). Cleaning has none: it is priced by cleaning depth.
+    private static final List<SeedItem> SERVICES = List.of(
+            new SeedItem("Cleaning", null),
+            new SeedItem("Fumigation", new BigDecimal("500.00")),
+            new SeedItem("Property Management", new BigDecimal("501.00"))
     );
 
     private final ServiceRepository serviceRepository;
@@ -27,15 +33,24 @@ public class ServiceSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        for (String name : SERVICE_NAMES) {
-            if (serviceRepository.existsByServiceNameIgnoreCase(name)) {
+        for (SeedItem item : SERVICES) {
+            Optional<Service> existing = serviceRepository.findByServiceNameIgnoreCase(item.name());
+            if (existing.isPresent()) {
+                // Fill in a missing price once; never overwrite a price set through the API.
+                Service service = existing.get();
+                if (service.getPrice() == null && item.price() != null) {
+                    service.setPrice(item.price());
+                    serviceRepository.save(service);
+                    log.info("Set seed price for service: {}", item.name());
+                }
                 continue;
             }
             Service service = new Service();
-            service.setServiceName(name);
+            service.setServiceName(item.name());
+            service.setPrice(item.price());
             service.setStatus(Status.ACTIVE);
             serviceRepository.save(service);
-            log.info("Seeded service: {}", name);
+            log.info("Seeded service: {}", item.name());
         }
     }
 }

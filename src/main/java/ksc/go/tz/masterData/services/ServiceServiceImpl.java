@@ -26,6 +26,7 @@ public class ServiceServiceImpl implements ServiceService {
         LocalDateTime now = LocalDateTime.now();
         Service service = new Service();
         service.setServiceName(siteDto.getServiceName());
+        service.setPrice(siteDto.getPrice());
         service.setStatus(Status.ACTIVE);
         service.setCreatedBy(createdBy);
         service.setCreatedAt(now);
@@ -81,6 +82,7 @@ public class ServiceServiceImpl implements ServiceService {
         Service existingService = serviceRepository.findById(siteId)
                 .orElseThrow(() -> new AfriException("Site not found"));
         existingService.setServiceName(siteDto.getServiceName());
+        existingService.setPrice(siteDto.getPrice());
         existingService.setUpdatedBy(userId);
         existingService.setUpdatedAt(LocalDateTime.now());
 

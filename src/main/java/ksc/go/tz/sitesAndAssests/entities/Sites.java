@@ -1,6 +1,7 @@
 package ksc.go.tz.sitesAndAssests.entities;
 
 
+import ksc.go.tz.masterData.entities.Service;
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
 import ksc.go.tz.masterData.entities.AddOn;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Table(name = "sites")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"cleaningDepth", "addOns"})
+@ToString(exclude = {"service", "cleaningDepth", "addOns"})
 @Getter
 @Setter
 @Where(clause = " deleted_at is null")
@@ -38,7 +39,12 @@ public class Sites extends BaseEntity<UUID> {
     private BigDecimal areaSqm;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cleaning_depth_id", nullable = false)
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
+
+    // Required for cleaning services; optional for Fumigation and Property Management.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cleaning_depth_id")
     private CleaningDepth cleaningDepth;
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -20,13 +20,12 @@ public class AddOnSeeder implements CommandLineRunner {
     private record SeedItem(String name, String price, String description) {
     }
 
-    // Prices in TZS
     private static final List<SeedItem> ADD_ONS = List.of(
-            new SeedItem("Window Cleaning", "20000", "Interior and exterior window and glass cleaning"),
-            new SeedItem("Carpet Cleaning", "35000", "Shampoo and vacuum cleaning of carpets and rugs"),
-            new SeedItem("Sofa Cleaning", "30000", "Upholstery cleaning for sofas and chairs"),
-            new SeedItem("Fridge Cleaning", "15000", "Inside and outside cleaning of the refrigerator"),
-            new SeedItem("Oven Cleaning", "15000", "Degreasing and cleaning of oven and cooker")
+            new SeedItem("Window Cleaning", "500", "Interior and exterior window and glass cleaning"),
+            new SeedItem("Carpet Cleaning", "501", "Shampoo and vacuum cleaning of carpets and rugs"),
+            new SeedItem("Sofa Cleaning", "502", "Upholstery cleaning for sofas and chairs"),
+            new SeedItem("Fridge Cleaning", "503", "Inside and outside cleaning of the refrigerator"),
+            new SeedItem("Oven Cleaning", "504", "Degreasing and cleaning of oven and cooker")
     );
 
     private final AddOnRepository addOnRepository;

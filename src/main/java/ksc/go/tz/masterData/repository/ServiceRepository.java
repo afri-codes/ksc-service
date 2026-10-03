@@ -10,5 +10,7 @@ public interface ServiceRepository extends JpaRepository<Service, UUID> {
     Optional<Service> findById(UUID siteId);
 
     boolean existsByServiceNameIgnoreCase(String serviceName);
+
+    Optional<Service> findByServiceNameIgnoreCase(String serviceName);
 }
 

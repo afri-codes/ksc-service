@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "payments")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "invoice")
 @Getter
 @Setter
 @Where(clause = " deleted_at is null")
@@ -40,6 +40,34 @@ public class Payment extends BaseEntity<UUID> {
 
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
+
+    @Column(name = "currency", length = 3)
+    private String currency;
+
+    @Column(name = "payer_phone")
+    private String payerPhone;
+
+    @Column(name = "failure_reason")
+    private String failureReason;
+
+    @Column(name = "notes")
+    private String notes;
+
+    /** Payment service reference for this attempt (quote it to support). */
+    @Column(name = "payment_reference")
+    private String paymentReference;
+
+    /** Hosted page the client opens to pay (CARD / CHECKOUT). */
+    @Column(name = "payment_url", length = 1000)
+    private String paymentUrl;
+
+    /** Control number the client pays (BILLPAY / BANK). */
+    @Column(name = "control_number")
+    private String controlNumber;
+
+    /** KSC receipt number, assigned when the payment succeeds (e.g. RCT-20261002-7K3Q9A). */
+    @Column(name = "receipt_number", unique = true)
+    private String receiptNumber;
 
 
 }

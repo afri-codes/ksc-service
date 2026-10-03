@@ -1,0 +1,4005 @@
+<title>KSC Platform Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #f4f7f6;
+  --surface: #ffffff;
+  --surface-2: #eaf0ee;
+  --ink: #142228;
+  --muted: #56686d;
+  --line: #d6dfdc;
+  --accent: #0b6b63;
+  --accent-soft: #d9ece8;
+  --code-bg: #eef3f1;
+  --get: #1d5fa8;   --get-bg: #e2edf9;
+  --post: #1f7a3d;  --post-bg: #e0f2e6;
+  --put: #8a5a00;   --put-bg: #fbefd6;
+  --patch: #6b3fa0; --patch-bg: #eee5f8;
+  --delete: #b42318; --delete-bg: #fbe4e1;
+  --note-bg: #fff6e0; --note-line: #d9a42b;
+  --font-display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0e1517;
+    --surface: #152024;
+    --surface-2: #1b282c;
+    --ink: #e2ebe9;
+    --muted: #93a6a7;
+    --line: #27363b;
+    --accent: #5cc6b8;
+    --accent-soft: #173c38;
+    --code-bg: #1a2629;
+    --get: #8dbdf2;   --get-bg: #19304a;
+    --post: #7fd59a;  --post-bg: #173a24;
+    --put: #f0c46b;   --put-bg: #3d3014;
+    --patch: #c6a6f0; --patch-bg: #2f2345;
+    --delete: #f59b91; --delete-bg: #45201c;
+    --note-bg: #2f2814; --note-line: #c99a2e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0e1517;
+  --surface: #152024;
+  --surface-2: #1b282c;
+  --ink: #e2ebe9;
+  --muted: #93a6a7;
+  --line: #27363b;
+  --accent: #5cc6b8;
+  --accent-soft: #173c38;
+  --code-bg: #1a2629;
+  --get: #8dbdf2;   --get-bg: #19304a;
+  --post: #7fd59a;  --post-bg: #173a24;
+  --put: #f0c46b;   --put-bg: #3d3014;
+  --patch: #c6a6f0; --patch-bg: #2f2345;
+  --delete: #f59b91; --delete-bg: #45201c;
+  --note-bg: #2f2814; --note-line: #c99a2e;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  line-height: 1.6;
+  padding-inline: 16px;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.layout {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 48px;
+  padding-block: 40px 80px;
+}
+
+/* Header */
+.masthead { grid-column: 1 / -1; display: grid; gap: 14px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0; }
+.masthead h1 { font-family: var(--font-display); font-size: clamp(30px, 4.6vw, 44px); line-height: 1.08; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.masthead p.lede { margin: 0; max-width: 64ch; color: var(--muted); font-size: 16.5px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 13.5px; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; }
+
+/* Sidebar */
+.sidebar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; max-height: calc(100vh - 40px); overflow-y: auto; padding-right: 6px; }
+.sidebar summary { display: none; }
+.sidebar .toc-title { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.toc, .toc ol { list-style: none; margin: 0; padding: 0; }
+.toc > li { margin: 0 0 2px; }
+.toc a { display: block; padding: 4px 10px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 14px; line-height: 1.35; }
+.toc ol a { font-size: 13px; color: var(--muted); padding-left: 22px; }
+.toc a:hover { background: var(--surface-2); }
+.toc a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+/* Content */
+main { min-width: 0; }
+main > * { max-width: 860px; }
+main h2 {
+  font-family: var(--font-display);
+  font-size: 27px;
+  line-height: 1.2;
+  margin: 56px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  text-wrap: balance;
+}
+main h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main h3 { font-family: var(--font-display); font-size: 19.5px; margin: 34px 0 10px; text-wrap: balance; }
+main h4 { font-size: 15px; font-weight: 600; margin: 24px 0 8px; font-family: var(--font-mono); color: var(--accent); }
+main p, main li { max-width: 70ch; }
+main ul, main ol { padding-left: 22px; }
+main li { margin: 4px 0; }
+hr { display: none; }
+
+code { font-family: var(--font-mono); font-size: .86em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.code-wrap, .diagram-wrap { overflow-x: auto; margin: 14px 0 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--code-bg); }
+pre { margin: 0; padding: 14px 16px; font-size: 13px; line-height: 1.55; }
+pre code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; }
+.diagram-wrap { background: var(--surface); }
+pre.diagram { line-height: 1.35; color: var(--ink); }
+
+.table-wrap { overflow-x: auto; margin: 12px 0 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: 12.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+table.endpoints td:nth-child(2) code { white-space: normal; overflow-wrap: anywhere; }
+td { font-variant-numeric: tabular-nums; }
+
+.method { display: inline-block; min-width: 58px; text-align: center; font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .04em; padding: 2px 6px; border-radius: 4px; }
+.m-get { color: var(--get); background: var(--get-bg); }
+.m-post { color: var(--post); background: var(--post-bg); }
+.m-put { color: var(--put); background: var(--put-bg); }
+.m-patch { color: var(--patch); background: var(--patch-bg); }
+.m-delete { color: var(--delete); background: var(--delete-bg); }
+
+.note { margin: 14px 0; padding: 10px 14px; background: var(--note-bg); border-left: 3px solid var(--note-line); border-radius: 0 6px 6px 0; }
+.note p { margin: 0; }
+
+.filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 14px 0 22px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.filter label { font-weight: 600; font-size: 14px; }
+.filter input { flex: 1 1 260px; min-width: 0; font: inherit; font-size: 14px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--ground); color: var(--ink); }
+.filter-count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+tr.hidden-row { display: none; }
+
+footer { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 18px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 24px 60px; }
+  .sidebar { position: static; max-height: none; padding: 0; }
+  .sidebar details { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .sidebar summary { display: block; cursor: pointer; padding: 10px 14px; font-weight: 600; }
+  .sidebar .toc-title { display: none; }
+  .sidebar .toc { padding: 0 8px 10px; }
+  main h2 { font-size: 23px; }
+}
+@media (min-width: 901px) {
+  .sidebar details > :not(summary) { display: block; }
+}
+</style>
+
+<div class="layout">
+  <header class="masthead">
+    <p class="eyebrow">System documentation · service <code>ksc</code></p>
+    <h1>KSC Cleaning, Fumigation &amp; Property Management Platform</h1>
+    <p class="lede">Architecture, modules, data model, API, business rules and operations for the KSC backend. Live endpoint docs are also in Swagger UI at <code>/swagger-ui/index.html</code>.</p>
+    <ul class="facts">
+      <li><b>Spring Boot</b> 3.3.3</li>
+      <li><b>Java</b> 17 (build with JDK 17/21)</li>
+      <li><b>Base path</b> <code>/api/v1</code></li>
+      <li><b>Database</b> PostgreSQL</li>
+      <li><b>Currency</b> TZS</li>
+    </ul>
+  </header>
+
+  <nav class="sidebar" aria-label="Contents">
+    <details id="toc-details" open>
+      <summary>Contents</summary>
+      <p class="toc-title">Contents</p>
+      <ol class="toc">
+<li><a href="#1-overview">1. Overview</a>
+</li>
+<li><a href="#2-technology-stack">2. Technology stack</a>
+</li>
+<li><a href="#3-architecture">3. Architecture</a>
+<ol>
+<li><a href="#layering">Layering</a></li>
+<li><a href="#application-bootstrap">Application bootstrap</a></li>
+<li><a href="#common-base-entity">Common base entity</a></li>
+<li><a href="#messaging-kafka">Messaging (Kafka)</a></li>
+<li><a href="#caching-redis">Caching (Redis)</a></li>
+</ol>
+</li>
+<li><a href="#4-project-structure">4. Project structure</a>
+</li>
+<li><a href="#5-domain-modules">5. Domain modules</a>
+<ol>
+<li><a href="#51-master-data-masterdata">5.1 Master data (masterData)</a></li>
+<li><a href="#52-sites-sitesandassests">5.2 Sites (sitesAndAssests)</a></li>
+<li><a href="#53-leads-leads">5.3 Leads (leads)</a></li>
+<li><a href="#54-quotation-quotation">5.4 Quotation (quotation)</a></li>
+<li><a href="#55-contracts-and-subscriptions-contractandsubscriptions">5.5 Contracts and subscriptions (contractAndSubscriptions)</a></li>
+<li><a href="#56-jobs-job">5.6 Jobs (job)</a></li>
+<li><a href="#57-billing-billing">5.7 Billing (billing)</a></li>
+<li><a href="#58-document-management-documentmanagement">5.8 Document management (DocumentManagement)</a></li>
+</ol>
+</li>
+<li><a href="#6-data-model">6. Data model</a>
+<ol>
+<li><a href="#61-entity-relationships">6.1 Entity relationships</a></li>
+<li><a href="#62-tables">6.2 Tables</a></li>
+</ol>
+</li>
+<li><a href="#7-api-documentation-swagger">7. API documentation (Swagger)</a>
+</li>
+<li><a href="#8-api-reference">8. API reference</a>
+<ol>
+<li><a href="#81-master-data">8.1 Master data</a></li>
+<li><a href="#82-sites">8.2 Sites</a></li>
+<li><a href="#83-leads">8.3 Leads</a></li>
+<li><a href="#84-quotes">8.4 Quotes</a></li>
+<li><a href="#85-invoices">8.5 Invoices</a></li>
+<li><a href="#86-payments">8.6 Payments</a></li>
+<li><a href="#87-contracts">8.7 Contracts</a></li>
+<li><a href="#88-subscriptions">8.8 Subscriptions</a></li>
+<li><a href="#89-jobs">8.9 Jobs</a></li>
+<li><a href="#810-file-management-apifile-upload">8.10 File management (/api/file-upload)</a></li>
+<li><a href="#811-dashboards">8.11 Dashboards</a></li>
+<li><a href="#812-not-yet-exposed">8.12 Not yet exposed</a></li>
+</ol>
+</li>
+<li><a href="#9-business-rules">9. Business rules</a>
+<ol>
+<li><a href="#91-site-pricing">9.1 Site pricing</a></li>
+<li><a href="#92-master-data">9.2 Master data</a></li>
+<li><a href="#93-leads">9.3 Leads</a></li>
+<li><a href="#94-quotes">9.4 Quotes</a></li>
+<li><a href="#95-contracts">9.5 Contracts</a></li>
+<li><a href="#96-subscriptions">9.6 Subscriptions</a></li>
+<li><a href="#97-jobs">9.7 Jobs</a></li>
+<li><a href="#98-clock-in-clock-out-geofence">9.8 Clock-in / clock-out geofence</a></li>
+<li><a href="#99-quotation-and-invoice-generation">9.9 Quotation and invoice generation</a></li>
+<li><a href="#910-quotation-and-invoice-pdfs">9.10 Quotation and invoice PDFs</a></li>
+<li><a href="#911-payment-service-integration">9.11 Payment service integration</a></li>
+<li><a href="#912-payment-receipts">9.12 Payment receipts</a></li>
+<li><a href="#913-dashboards">9.13 Dashboards</a></li>
+</ol>
+</li>
+<li><a href="#10-enumerations">10. Enumerations</a>
+</li>
+<li><a href="#11-security-and-permissions">11. Security and permissions</a>
+<ol>
+<li><a href="#permissions-reference">Permissions reference</a></li>
+<li><a href="#suggested-grants-for-dashboard-users">Suggested grants for dashboard users</a></li>
+</ol>
+</li>
+<li><a href="#12-seed-data">12. Seed data</a>
+</li>
+<li><a href="#13-configuration">13. Configuration</a>
+<ol>
+<li><a href="#environment-variables">Environment variables</a></li>
+</ol>
+</li>
+<li><a href="#14-building-and-running">14. Building and running</a>
+<ol>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#build">Build</a></li>
+<li><a href="#run-the-tests">Run the tests</a></li>
+<li><a href="#run-locally">Run locally</a></li>
+<li><a href="#docker">Docker</a></li>
+<li><a href="#health-and-metrics">Health and metrics</a></li>
+</ol>
+</li>
+<li><a href="#15-database-setup">15. Database setup</a>
+<ol>
+<li><a href="#relaxed-not-null-constraints-run-by-hand">Relaxed NOT NULL constraints (run by hand)</a></li>
+<li><a href="#full-schema-for-these-features">Full schema for these features</a></li>
+</ol>
+</li>
+<li><a href="#16-implementation-status-and-known-issues">16. Implementation status and known issues</a>
+<ol>
+<li><a href="#not-built-yet">Not built yet</a></li>
+<li><a href="#known-issues">Known issues</a></li>
+</ol>
+</li>
+<li><a href="#17-development-conventions">17. Development conventions</a>
+</li>
+</ol>
+    </details>
+  </nav>
+
+  <main id="content">
+<h2 id="1-overview">1. Overview</h2>
+<p>KSC is a Spring Boot backend that manages the full lifecycle of a cleaning / fumigation / property-management business:</p>
+<div class="diagram-wrap"><pre class="diagram"><code>Lead ──► Site ──(automatic)──► Quotation + Invoice ──► Payment (mobile money via payment service, or cash)
+                                   │
+                                   └─ accepted ──► Contract ──► Subscription ──► Job ──► Time logs, Checklists, Photos
+                                                                                   └──► Feedback ──► Staff ratings
+</code></pre></div>
+<ul>
+<li><strong>Leads</strong> capture prospective clients and the service they are interested in.</li>
+<li><strong>Sites</strong> are the client properties to be serviced. Each site selects a <strong>service</strong> (Cleaning, Fumigation, Property Management), a <strong>cleaning depth</strong> (required for Cleaning) and optional <strong>add-ons</strong>, which together determine its <strong>total price</strong>.</li>
+<li><strong>Quotations and invoices</strong> are generated automatically when a site is registered, and regenerated when its pricing changes. Both can be downloaded as PDFs.</li>
+<li><strong>Payments</strong> are collected by mobile money through the platform payment service (results arrive on Kafka) or recorded as cash; the invoice becomes PAID when covered.</li>
+<li><strong>Contracts</strong> are created from an <strong>accepted</strong> quotation and move through DRAFT → SENT → SIGNED → ACTIVE → EXPIRED (or REJECTED / TERMINATED); <strong>subscriptions</strong> schedule recurring work under a contract.</li>
+<li><strong>Jobs</strong> are individual service visits, carried out by a <strong>crew</strong>; <strong>crew members</strong> link staff to crews. Staff <strong>clock in/out</strong> with geofence validation.</li>
+<li><strong>Feedback</strong> and <strong>staff ratings</strong> are collected after jobs.</li>
+<li><strong>Master data</strong> (services, slots, cleaning depths, add-ons) configures what the business offers.</li>
+<li><strong>Dashboards</strong> for super admins, clients, staff and supervisors are computed by PostgreSQL functions.</li>
+</ul>
+<hr />
+<h2 id="2-technology-stack">2. Technology stack</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language</td>
+<td>Java 17 (<code>java.version</code> in <code>pom.xml</code>)</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Spring Boot 3.3.3</td>
+</tr>
+<tr>
+<td>Persistence</td>
+<td>Spring Data JPA, Hibernate, PostgreSQL</td>
+</tr>
+<tr>
+<td>Caching</td>
+<td>Redis (Lettuce client, Spring Cache, 6 h TTL)</td>
+</tr>
+<tr>
+<td>Messaging</td>
+<td>Apache Kafka (<code>spring-kafka</code>); AMQP starter also on classpath</td>
+</tr>
+<tr>
+<td>Service discovery / config</td>
+<td>Spring Cloud Netflix Eureka client, Spring Cloud Config client</td>
+</tr>
+<tr>
+<td>Inter-service calls</td>
+<td>Spring Cloud OpenFeign, <code>RestTemplate</code></td>
+</tr>
+<tr>
+<td>API docs</td>
+<td>springdoc-openapi 2.6.0 (Swagger UI)</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Jakarta Bean Validation (<code>spring-boot-starter-validation</code>)</td>
+</tr>
+<tr>
+<td>Security / utilities</td>
+<td>Internal libraries <code>afriSecurity</code> and <code>afriUtils</code></td>
+</tr>
+<tr>
+<td>Documents</td>
+<td>Apache PDFBox 2.0 (quotation/invoice PDFs), Apache Tika</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Spring Boot Actuator, Micrometer + Prometheus, Zipkin (Brave) tracing</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>Lombok 1.18.34, GraphQL starter, fuzzy-matcher</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="3-architecture">3. Architecture</h2>
+<p>KSC runs as one microservice in a Spring Cloud ecosystem:</p>
+<div class="diagram-wrap"><pre class="diagram"><code>                 ┌──────────────────┐
+                 │  Config Server   │  (CONFIG_SERVER_URI, default http://localhost:7000/)
+                 └────────┬─────────┘
+                          │ properties
+┌──────────┐     ┌────────▼─────────┐     ┌──────────────┐
+│  Eureka  │◄────┤   ksc service    ├────►│  PostgreSQL  │
+└──────────┘     │  (Spring Boot)   │     └──────────────┘
+                 │                  ├────►│    Redis     │ cache
+                 │                  ├────►│    Kafka     │ events
+                 └────────┬─────────┘     └──────────────┘
+                          │ Feign / REST
+                   other platform services
+</code></pre></div>
+<h3 id="layering">Layering</h3>
+<p>Each module follows the same layered structure:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>controllers</code></td>
+<td>REST endpoints, <code>@Permission</code> checks, request validation (<code>@Valid</code>), wraps results with <code>ApiResponseUtil</code></td>
+</tr>
+<tr>
+<td><code>dto</code></td>
+<td>Request DTOs (<code>XxxDto</code>) and response DTOs (<code>XxxResponseDto</code>, built from the entity via a constructor)</td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td>Interface + <code>XxxServiceImpl</code> with business logic; <code>@Transactional</code></td>
+</tr>
+<tr>
+<td><code>repository</code></td>
+<td>Spring Data <code>JpaRepository</code> interfaces</td>
+</tr>
+<tr>
+<td><code>entities</code></td>
+<td>JPA entities extending <code>BaseEntity</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="application-bootstrap">Application bootstrap</h3>
+<p><code>KscApplication</code> scans the packages <code>ksc.go.tz</code>, <code>afriUtils</code> and <code>afriSecurity</code>, and enables:</p>
+<ul>
+<li>JPA repositories in <code>ksc.go.tz</code>, <code>afriSecurity.permissions.repository</code> and <code>afriSecurity.auditLogs.repositories</code></li>
+<li>Feign clients (<code>@EnableFeignClients</code>)</li>
+<li>Async processing (<code>@EnableAsync</code>)</li>
+<li>Scheduled tasks (<code>@EnableScheduling</code>)</li>
+</ul>
+<h3 id="common-base-entity">Common base entity</h3>
+<p>All entities extend <code>ksc.go.tz.common.BaseEntity&lt;UUID&gt;</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Column</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>id</code></td>
+<td>UUID, generated (<code>uuid_generate_v4()</code> default)</td>
+</tr>
+<tr>
+<td><code>createdBy</code></td>
+<td><code>created_by</code></td>
+<td>Auditing (<code>@CreatedBy</code>)</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td><code>created_at</code></td>
+<td><code>@CreationTimestamp</code></td>
+</tr>
+<tr>
+<td><code>updatedBy</code></td>
+<td><code>updated_by</code></td>
+<td>Auditing (<code>@LastModifiedBy</code>)</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td><code>updated_at</code></td>
+<td><code>@UpdateTimestamp</code></td>
+</tr>
+<tr>
+<td><code>deletedAt</code></td>
+<td><code>deleted_at</code></td>
+<td>Soft delete marker</td>
+</tr>
+<tr>
+<td><code>deleted</code></td>
+<td><code>deleted</code></td>
+<td>Boolean, default <code>false</code></td>
+</tr>
+<tr>
+<td><code>active</code></td>
+<td><code>active</code></td>
+<td>Boolean, default <code>true</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Soft delete:</strong> most entities have <code>@Where(clause = "deleted_at is null")</code>, so a row with <code>deleted_at</code> set is hidden from all queries. "Delete" endpoints set <code>deleted_at</code> instead of removing rows.</p>
+<h3 id="messaging-kafka">Messaging (Kafka)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Constant</th>
+<th>Declared partitions / replicas</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>audit.logs</code></td>
+<td><code>KafkaTopic.AUDIT_LOGS</code></td>
+<td>3 / 1</td>
+<td>Audit log events</td>
+</tr>
+<tr>
+<td><code>company.user_registration</code></td>
+<td><code>KafkaTopic.COMPANY_USER_REGISTRATION</code></td>
+<td>3 / 1</td>
+<td>Produced by <code>AfriTransProducer.sendUpdateCompanyUser</code></td>
+</tr>
+<tr>
+<td><code>ksc.payment.results</code></td>
+<td><code>KafkaTopic.PAYMENT_RESULTS</code></td>
+<td>3 / 1</td>
+<td><strong>Consumed</strong> by KSC (group <code>ksc-payment-results</code>): payment outcomes for system <code>KSC</code> from the payment service</td>
+</tr>
+</tbody>
+</table></div>
+<aside class="note">
+<p><strong>Topics are not created by KSC.</strong> <code>KafkaConfig</code> declares a <code>NewTopic</code> bean for each topic above, but the shared config-server properties set <code>spring.kafka.admin.auto-create=false</code>, so those beans are ignored at startup. Each topic exists only if it was <strong>created on the broker</strong>, or if the broker has <code>auto.create.topics.enable=true</code> (Kafka's default, not confirmed for this broker). Before relying on payments, make sure <code>ksc.payment.results</code> exists, for example:</p>
+<p><code>bash
+kafka-topics.sh --bootstrap-server &lt;broker&gt;:9092 --create --if-not-exists --topic ksc.payment.results --partitions 3 --replication-factor 1</code></p>
+</aside>
+<p>The payment results topic uses plain JSON strings (own string deserializer), independent of the service-wide Kafka serializer settings. See <a href="#911-payment-service-integration">Payment service integration</a>.</p>
+<p><code>AfriTransConsumer</code> exists but currently has no active listeners.</p>
+<h3 id="caching-redis">Caching (Redis)</h3>
+<p><code>RedisConfig</code> enables Spring Cache backed by Redis with string keys, JSON (Jackson) values and a default TTL of <strong>6 hours</strong>.</p>
+<hr />
+<h2 id="4-project-structure">4. Project structure</h2>
+<div class="diagram-wrap"><pre class="diagram"><code>src/main/java/ksc/go/tz/
+├── KscApplication.java
+├── common/                     BaseEntity, configs (OpenAPI, Redis, RestTemplate, file folders), Kafka
+├── enums/                      Shared enumerations
+├── leads/                      Lead capture and tracking
+├── sitesAndAssests/            Client sites
+├── quotation/                  Quotes (auto-generated on site registration)
+├── contractAndSubscriptions/   Contracts and subscriptions
+├── job/                        Jobs, crews and crew members, checklists, time tracking, photos, feedback, staff ratings
+├── billing/                    Invoices (generation + read endpoints) and payments
+├── masterData/                 Services, slots, cleaning depths, add-ons, seeders, pricing
+├── DocumentManagement/         File upload / download
+├── dashboard/                  Super admin and client dashboards (computed by PostgreSQL functions); reports not built
+src/main/resources/db/functions/   Dashboard SQL functions, installed at startup
+├── HRM/, feedbackEngine/, fieldOperation/, mobileApp/   Placeholders (no source files yet)
+src/main/resources/
+├── application.properties
+└── newFeatures                 Feature notes
+</code></pre></div>
+<hr />
+<h2 id="5-domain-modules">5. Domain modules</h2>
+<h3 id="51-master-data-masterdata">5.1 Master data (<code>masterData</code>)</h3>
+<p>Reference data that configures the business offering.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Service</strong></td>
+<td>A service line offered (Cleaning, Fumigation, Property Management)</td>
+</tr>
+<tr>
+<td><strong>Slot</strong></td>
+<td>An available date/time range for booking</td>
+</tr>
+<tr>
+<td><strong>CleaningDepth</strong></td>
+<td>A cleaning level (e.g. Shallow, Medium, Deep) with its own price</td>
+</tr>
+<tr>
+<td><strong>AddOn</strong></td>
+<td>An optional extra (e.g. Window Cleaning) with its own price</td>
+</tr>
+</tbody>
+</table></div>
+<p>All four support create, list, get by id, update, soft delete and status change (<code>ACTIVE</code> / <code>INACTIVE</code>).</p>
+<p><code>PricingItemResolver</code> (shared component) looks up and validates cleaning depths and add-ons by ID and calculates the total price. It is used by the Sites module.</p>
+<h3 id="52-sites-sitesandassests">5.2 Sites (<code>sitesAndAssests</code>)</h3>
+<p>A <strong>site</strong> is a client property. On registration the site records its type, area, rooms, address, GPS coordinates, security/access info, <strong>one required service</strong> (from master data), a <strong>cleaning depth</strong> (required for Cleaning sites, optional for Fumigation and Property Management), <strong>zero or more add-ons</strong>, and a server-calculated <strong>total price</strong>. See <a href="#91-site-pricing">Site pricing</a>.</p>
+<p>The site's latitude/longitude are also stored as <code>plotCoordinates</code> (JSON) and are used for the clock-in geofence.</p>
+<h3 id="53-leads-leads">5.3 Leads (<code>leads</code>)</h3>
+<p>Prospective clients: name, phone, email, message, service of interest (<code>LeadServiceType</code>), source (<code>LeadSource</code>) and status (<code>LeadStatus</code>). Supports a paginated listing with sorting and filtering by status, source and service line.</p>
+<h3 id="54-quotation-quotation">5.4 Quotation (<code>quotation</code>)</h3>
+<p>A <strong>quote</strong> belongs to a site and holds a quote number, requester, client tier, hourly rate, estimated hours, a min/max price range, validity date, service type, frequency, area, status (<code>QuoteStatus</code>) and <strong>line items</strong>. Quotes can be <strong>sent</strong> and <strong>accepted</strong>.</p>
+<p>When a site is registered, <code>QuoteService.generateForSite</code> creates its quote automatically. See <a href="#99-quotation-and-invoice-generation">Quotation and invoice generation</a>.</p>
+<h3 id="55-contracts-and-subscriptions-contractandsubscriptions">5.5 Contracts and subscriptions (<code>contractAndSubscriptions</code>)</h3>
+<ul>
+<li><strong>Contract:</strong> created from one <strong>ACCEPTED</strong> quote. Holds a contract number, status (<code>ContractStatus</code>), client, site, service type, business info (TIN, BRELA number), personal ID number, frequency, contract value, terms, start/end dates, and who signed / rejected / terminated it and when. The contract document is generated as a PDF on request. See <a href="#95-contracts">Contract lifecycle</a>.</li>
+<li><strong>Subscription:</strong> recurring service under a contract: status, recurrence, shift preference, crew size, price per cycle and next run date. Lifecycle actions: cancel, pause, resume, renew. Responses now include <code>subscriptionId</code>.</li>
+</ul>
+<h3 id="56-jobs-job">5.6 Jobs (<code>job</code>)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Job</strong></td>
+<td>A service visit: contract, optional subscription, site, crew, service type, job type, scheduled start/end, status</td>
+</tr>
+<tr>
+<td><strong>Crew</strong></td>
+<td>A team with a name, supervisor and zone</td>
+</tr>
+<tr>
+<td><strong>JobCheckList</strong> / <strong>JobChecklistItem</strong></td>
+<td>A checklist template on a job and its individual tasks (label, complete, notes)</td>
+</tr>
+<tr>
+<td><strong>JobPhoto</strong></td>
+<td>Photos captured for a job (storage URL, capture time, sync flag)</td>
+</tr>
+<tr>
+<td><strong>TimeLog</strong></td>
+<td>Staff clock-in/out with geofence status</td>
+</tr>
+<tr>
+<td><strong>Feedback</strong></td>
+<td>Client rating and comment for a job, with dispute status</td>
+</tr>
+<tr>
+<td><strong>StaffRating</strong></td>
+<td>Per-staff rating linked to a feedback</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="57-billing-billing">5.7 Billing (<code>billing</code>)</h3>
+<ul>
+<li><strong>Invoice:</strong> generated from a quote for a site (<code>InvoiceService.generateForQuote</code>). Holds an invoice number, line items, amount due, issue and due dates, status and PDF URLs. The contract link is optional and is set once a contract exists.</li>
+<li><strong>Payment:</strong> belongs to an invoice; amount, method (<code>PaymentMethod</code>), provider reference, status (<code>PaymentStatus</code>), paid time.</li>
+</ul>
+<p><code>InvoiceController</code> exposes read and PDF endpoints. <code>PaymentController</code> starts mobile-money payments through the payment service, records cash payments and lists payments. See <a href="#911-payment-service-integration">Payment service integration</a>.</p>
+<h3 id="58-document-management-documentmanagement">5.8 Document management (<code>DocumentManagement</code>)</h3>
+<p>Upload and download of files (multipart or base64), stored on disk under <code>file.upload-dir</code>, with sub-folders per <code>DocumentType</code> configured via <code>file.upload.paths.*</code>. Metadata is stored in the <code>uploads</code> table.</p>
+<hr />
+<h2 id="6-data-model">6. Data model</h2>
+<h3 id="61-entity-relationships">6.1 Entity relationships</h3>
+<div class="diagram-wrap"><pre class="diagram"><code>services ◄──(N:1)── sites
+cleaning_depths ◄──(N:1, optional)── sites ──(N:M via site_add_ons)──► add_ons
+                             ▲
+                             │ N:1
+quotes ──────────────────────┘
+  ▲
+  │ 1:1
+contracts ──► quotes (one live contract per quote), sites
+  ▲   ▲
+  │   └── subscriptions
+  ├──(optional)── invoices ◄── payments
+  │               invoices ──► quotes, sites
+  │
+jobs ──► contracts, sites, subscriptions (optional), crews (optional)
+  ▲
+  ├── crews ◄── crew_members (staff)
+  ├── job_checklists ◄── checklist_items
+  ├── job_photos
+  ├── time_logs
+  └── feedbacks ◄── staff_ratings
+
+Standalone: leads, services, slots, uploads
+</code></pre></div>
+<h3 id="62-tables">6.2 Tables</h3>
+<p>Every table also has the <a href="#common-base-entity">base entity columns</a>.</p>
+<h4 id="services"><code>services</code></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service_name</code></td>
+<td>varchar</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>numeric(15,2)</td>
+<td>optional fixed price per site in TZS (e.g. Fumigation, Property Management); null = no fixed charge</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>varchar (<code>Status</code>)</td>
+<td>required</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="slots"><code>slots</code></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start_date_time</code></td>
+<td>timestamp</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>end_date_time</code></td>
+<td>timestamp</td>
+<td>required, after start</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>varchar (<code>Status</code>)</td>
+<td>required</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cleaning-depths-and-add-ons"><code>cleaning_depths</code> and <code>add_ons</code></h4>
+<p>Both tables have the same columns:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>varchar</td>
+<td>required, unique (case-insensitive, enforced in service layer)</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>numeric(15,2)</td>
+<td>required, ≥ 0, TZS</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>varchar</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>varchar (<code>Status</code>)</td>
+<td>required</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sites"><code>sites</code></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>site_owner_id</code></td>
+<td>varchar</td>
+<td>required; set to the creating user's ID</td>
+</tr>
+<tr>
+<td><code>property_type</code></td>
+<td>varchar</td>
+<td></td>
+</tr>
+<tr>
+<td><code>site_type</code></td>
+<td>varchar</td>
+<td>e.g. residential, commercial</td>
+</tr>
+<tr>
+<td><code>area_sqm</code></td>
+<td>numeric</td>
+<td></td>
+</tr>
+<tr>
+<td><code>service_id</code></td>
+<td>uuid → <code>services.id</code></td>
+<td><strong>required</strong>: service requested for the site</td>
+</tr>
+<tr>
+<td><code>cleaning_depth_id</code></td>
+<td>uuid → <code>cleaning_depths.id</code></td>
+<td>required for Cleaning sites; null allowed for Fumigation / Property Management</td>
+</tr>
+<tr>
+<td><code>total_price</code></td>
+<td>numeric(15,2)</td>
+<td><strong>required</strong>, server-calculated</td>
+</tr>
+<tr>
+<td><code>room_count</code></td>
+<td>integer</td>
+<td></td>
+</tr>
+<tr>
+<td><code>address_area</code></td>
+<td>varchar</td>
+<td></td>
+</tr>
+<tr>
+<td><code>plot_coordinates</code></td>
+<td>jsonb</td>
+<td><code>{latitude, longitude}</code></td>
+</tr>
+<tr>
+<td><code>longitude</code></td>
+<td>varchar</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>latitude</code></td>
+<td>varchar</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>is_secured</code></td>
+<td>boolean</td>
+<td></td>
+</tr>
+<tr>
+<td><code>access_type</code></td>
+<td>varchar</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="site-add-ons-join-table"><code>site_add_ons</code> (join table)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>site_id</code></td>
+<td>uuid → <code>sites.id</code></td>
+</tr>
+<tr>
+<td><code>add_on_id</code></td>
+<td>uuid → <code>add_ons.id</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="leads"><code>leads</code></h4>
+<p><code>full_name</code>, <code>phone_number</code>, <code>email</code>, <code>message</code>, <code>service_type_interest</code> (<code>LeadServiceType</code>), <code>source</code> (<code>LeadSource</code>), <code>status</code> (<code>LeadStatus</code>).</p>
+<h4 id="quotes"><code>quotes</code></h4>
+<p><code>quote_number</code> (unique), <code>site_id</code> (required), <code>requested_by</code>, <code>client_tier</code>, <code>hourly_rate</code>, <code>estimated_hours</code>, <code>price_min</code>, <code>price_max</code>, <code>valid_until</code>, <code>service_type</code> (<code>LeadServiceType</code>), <code>frequency</code> (<code>Frequency</code>), <code>area_sqm</code>, <code>status</code> (<code>QuoteStatus</code>).</p>
+<h4 id="quote-items-invoice-items-line-items"><code>quote_items</code> / <code>invoice_items</code> (line items)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>quote_id</code> / <code>invoice_id</code></td>
+<td>uuid</td>
+<td>owning quote or invoice</td>
+</tr>
+<tr>
+<td><code>line_no</code></td>
+<td>integer</td>
+<td>order of the line</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>varchar</td>
+<td>e.g. "Cleaning depth: Deep", "Add-on: Window Cleaning"</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>integer</td>
+<td></td>
+</tr>
+<tr>
+<td><code>unit_price</code></td>
+<td>numeric(15,2)</td>
+<td>TZS</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>numeric(15,2)</td>
+<td>quantity × unit price</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="contracts"><code>contracts</code></h4>
+<p><code>contract_number</code> (unique), <code>quote_id</code> (required; one live contract per quote, enforced in code), <code>site_id</code>, <code>client_id</code>, <code>service_type</code>, <code>status</code> (<code>ContractStatus</code>), <code>signature_status</code> (<code>SignatureStatus</code>), <code>business_info</code>, <code>business_tin</code>, <code>business_brela_no</code>, <code>personal_id_no</code>, <code>frequency</code>, <code>contract_value</code>, <code>terms</code>, <code>pdf_url</code> (optional), <code>paid_at</code>, <code>start_date</code>, <code>end_date</code>, <code>sent_at</code>, <code>signed_at</code>, <code>signed_by</code>, <code>rejected_at</code>, <code>rejection_reason</code>, <code>terminated_at</code>, <code>termination_reason</code>.</p>
+<h4 id="subscriptions"><code>subscriptions</code></h4>
+<p><code>contract_id</code> (required), <code>status</code> (<code>SubscriptionStatus</code>), <code>recurrence</code>, <code>shift_preference</code>, <code>crew_size</code>, <code>price_per_cycle</code>, <code>next_run_date</code>.</p>
+<h4 id="jobs"><code>jobs</code></h4>
+<p><code>contract_id</code> (required), <code>subscription_id</code>, <code>site_id</code> (required), <code>crew_id</code>, <code>service_type</code>, <code>job_type</code> (<code>JobType</code>), <code>scheduled_start</code>, <code>scheduled_end</code>, <code>status</code> (<code>JobStatus</code>).</p>
+<h4 id="crews-crew-members"><code>crews</code> / <code>crew_members</code></h4>
+<ul>
+<li><code>crews</code>: <code>crew_name</code>, <code>supervisor_id</code> (supervisor's user ID), <code>supervisor_name</code>, <code>zone_name</code>.</li>
+<li><code>crew_members</code>: <code>crew_id</code> (required), <code>staff_id</code> (staff user ID, same as <code>time_logs.staff_id</code>), <code>staff_name</code>, <code>member_role</code>, <code>joined_on</code>. One live membership per crew and staff member (enforced in code).</li>
+</ul>
+<h4 id="job-checklists-checklist-items"><code>job_checklists</code> / <code>checklist_items</code></h4>
+<ul>
+<li><code>job_checklists</code>: <code>job_id</code> (required), <code>template_name</code></li>
+<li><code>checklist_items</code>: <code>checklist_id</code> (required), <code>task_label</code>, <code>complete</code>, <code>notes</code></li>
+</ul>
+<h4 id="job-photos"><code>job_photos</code></h4>
+<p><code>job_id</code> (required), <code>image</code>, <code>storage_url</code>, <code>captured_at</code>, <code>synced</code>.</p>
+<h4 id="time-logs"><code>time_logs</code></h4>
+<p><code>job_id</code> (required), <code>staff_id</code>, <code>clock_in</code>, <code>clock_out</code>, <code>geofence_zone_in</code>, <code>geofence_zone_out</code>, <code>clock_in_status</code>, <code>clock_out_status</code> (<code>TimeLogStatus</code>).</p>
+<h4 id="feedbacks-staff-ratings"><code>feedbacks</code> / <code>staff_ratings</code></h4>
+<ul>
+<li><code>feedbacks</code>: <code>job_id</code> (required), <code>submitted_by</code>, <code>service_rating</code>, <code>comment</code>, <code>dispute_status</code> (<code>DisputeStatus</code>)</li>
+<li><code>staff_ratings</code>: <code>feedback_id</code> (required), <code>staff</code>, <code>rating</code>, <code>comment</code></li>
+</ul>
+<h4 id="invoices-payments"><code>invoices</code> / <code>payments</code></h4>
+<ul>
+<li><code>invoices</code>: <code>invoice_number</code> (unique), <code>quote_id</code>, <code>site_id</code>, <code>contract_id</code> (optional), <code>issue_date</code>, <code>due_date</code>, <code>amount_due</code>, <code>amount_paid</code>, <code>billing_period_start</code>, <code>billing_period_end</code>, <code>status</code>, <code>pdf_local_url</code>, <code>pdf_url</code></li>
+<li><code>payments</code>: <code>invoice_id</code> (required), <code>amount</code>, <code>currency</code>, <code>method</code> (<code>PaymentMethod</code>), <code>payer_phone</code>, <code>provider_ref</code> (provider reference or cash receipt number), <code>status</code> (<code>PaymentStatus</code>), <code>failure_reason</code>, <code>notes</code>, <code>receipt_number</code> (unique, set on SUCCESS), <code>payment_reference</code> (payment service reference), <code>payment_url</code> (card/checkout link), <code>control_number</code> (BillPay), <code>paid_at</code></li>
+</ul>
+<h4 id="uploads"><code>uploads</code></h4>
+<p><code>file_name</code>, <code>file_type</code> (<code>DocumentType</code>), <code>file_description</code>, <code>kb_size</code>.</p>
+<hr />
+<h2 id="7-api-documentation-swagger">7. API documentation (Swagger)</h2>
+<p>The OpenAPI spec is generated at runtime by springdoc from controller and DTO annotations.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Swagger UI</td>
+<td><code>http://&lt;host&gt;:&lt;port&gt;/swagger-ui/index.html</code></td>
+</tr>
+<tr>
+<td>OpenAPI JSON</td>
+<td><code>http://&lt;host&gt;:&lt;port&gt;/v3/api-docs</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The Master Data (Services, Slots, Cleaning Depths, Add-ons), Sites, Contracts, Invoices, Payments and Dashboards controllers carry <code>@Tag</code> groups, endpoint descriptions and <code>@Schema</code> field descriptions/examples. Other modules (leads, quotes, subscriptions, jobs, files) currently document a summary per endpoint only.</p>
+<hr />
+<h2 id="8-api-reference">8. API reference</h2>
+<div class="filter" role="search">
+  <label for="endpoint-filter">Filter endpoints</label>
+  <input id="endpoint-filter" type="search" placeholder="Path, method or permission — e.g. add-ons, DELETE, VIEW_SITE" autocomplete="off">
+  <span id="filter-count" class="filter-count" aria-live="polite"></span>
+</div>
+
+<ul>
+<li><strong>Base path:</strong> <code>/api/v1</code>, except file management which uses <code>/api/file-upload</code></li>
+<li><strong>Authentication:</strong> all endpoints take the caller's identity from the Spring Security <code>Authentication</code> (resolved by <code>afriSecurity</code>'s <code>AuthDetailsExtractor</code>).</li>
+<li><strong>Authorization:</strong> each endpoint is protected by an <code>@Permission</code> code (listed below).</li>
+<li><strong>Response format:</strong> responses are wrapped by <code>afriUtils</code>' <code>ApiResponseUtil.ApiResponseEntity</code>, which carries the payload, a message and a <code>ResponseEnum</code> status (e.g. <code>SUCCESS</code>, <code>NOT_FOUND</code>).</li>
+<li><strong>Errors:</strong> business-rule violations throw <code>AfriException</code> with a readable message (e.g. "Site not found").</li>
+<li><strong>IDs:</strong> all IDs are UUID strings. An invalid UUID returns an error such as "Invalid add-on ID: …".</li>
+<li><strong>Dates:</strong> ISO-8601, e.g. <code>2026-10-05T08:00:00</code>.</li>
+</ul>
+<h3 id="81-master-data">8.1 Master data</h3>
+<h4 id="services_1">Services</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/services</code></td>
+<td><code>SAVE_SERVICE</code></td>
+<td>Create a service</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/services</code></td>
+<td><code>VIEW_SERVICE</code></td>
+<td>List services</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/services/{id}</code></td>
+<td><code>VIEW_SERVICE_BY_ID</code></td>
+<td>Get a service</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/service/{id}</code></td>
+<td><code>UPDATE_SERVICE</code></td>
+<td>Update a service (note: singular path)</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/services/{id}</code></td>
+<td><code>DELETE_SERVICE</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-patch">PATCH</span></td>
+<td><code>/services/{serviceId}/status?status=ACTIVE\|INACTIVE</code></td>
+<td><code>CHANGE_SERVICE_STATUS</code></td>
+<td>Change status</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request body:</p>
+<div class="code-wrap"><pre><code class="language-json">{ &quot;serviceName&quot;: &quot;Fumigation&quot;, &quot;price&quot;: 150000.00 }
+</code></pre></div>
+<p><code>price</code> is optional (must not be negative). When set, every site with this service is charged it once, as a "Service: …" line on its quotation and invoice. Leave it empty for Cleaning, which is priced by cleaning depth. The response includes <code>price</code>.</p>
+<h4 id="slots_1">Slots</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/slots</code></td>
+<td><code>SAVE_SLOT</code></td>
+<td>Create an available slot</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/slots</code></td>
+<td><code>VIEW_SLOT</code></td>
+<td>List slots</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/slots/{id}</code></td>
+<td><code>VIEW_SLOT_BY_ID</code></td>
+<td>Get a slot</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/slots/{id}</code></td>
+<td><code>UPDATE_SLOT</code></td>
+<td>Update a slot</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/slots/{id}</code></td>
+<td><code>DELETE_SLOT</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-patch">PATCH</span></td>
+<td><code>/slots/{id}/status?status=ACTIVE\|INACTIVE</code></td>
+<td><code>CHANGE_SLOT_STATUS</code></td>
+<td>Change status</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request body:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;startDateTime&quot;: &quot;2026-10-05T08:00:00&quot;,
+  &quot;endDateTime&quot;: &quot;2026-10-05T12:00:00&quot;
+}
+</code></pre></div>
+<p>Response:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;slotId&quot;: &quot;3fa85f64-5717-4562-b3fc-2c963f66afa6&quot;,
+  &quot;startDateTime&quot;: &quot;2026-10-05T08:00:00&quot;,
+  &quot;endDateTime&quot;: &quot;2026-10-05T12:00:00&quot;,
+  &quot;status&quot;: &quot;ACTIVE&quot;
+}
+</code></pre></div>
+<h4 id="cleaning-depths">Cleaning depths</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/cleaning-depths</code></td>
+<td><code>SAVE_CLEANING_DEPTH</code></td>
+<td>Create</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/cleaning-depths</code></td>
+<td><code>VIEW_CLEANING_DEPTH</code></td>
+<td>List</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/cleaning-depths/{id}</code></td>
+<td><code>VIEW_CLEANING_DEPTH_BY_ID</code></td>
+<td>Get one</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/cleaning-depths/{id}</code></td>
+<td><code>UPDATE_CLEANING_DEPTH</code></td>
+<td>Update</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/cleaning-depths/{id}</code></td>
+<td><code>DELETE_CLEANING_DEPTH</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-patch">PATCH</span></td>
+<td><code>/cleaning-depths/{id}/status?status=ACTIVE\|INACTIVE</code></td>
+<td><code>CHANGE_CLEANING_DEPTH_STATUS</code></td>
+<td>Change status</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="add-ons">Add-ons</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/add-ons</code></td>
+<td><code>SAVE_ADD_ON</code></td>
+<td>Create</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/add-ons</code></td>
+<td><code>VIEW_ADD_ON</code></td>
+<td>List</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/add-ons/{id}</code></td>
+<td><code>VIEW_ADD_ON_BY_ID</code></td>
+<td>Get one</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/add-ons/{id}</code></td>
+<td><code>UPDATE_ADD_ON</code></td>
+<td>Update</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/add-ons/{id}</code></td>
+<td><code>DELETE_ADD_ON</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-patch">PATCH</span></td>
+<td><code>/add-ons/{id}/status?status=ACTIVE\|INACTIVE</code></td>
+<td><code>CHANGE_ADD_ON_STATUS</code></td>
+<td>Change status</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request body (cleaning depths and add-ons):</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;name&quot;: &quot;Window Cleaning&quot;,
+  &quot;price&quot;: 20000.00,
+  &quot;description&quot;: &quot;Interior and exterior window and glass cleaning&quot;
+}
+</code></pre></div>
+<p>Response:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;addOnId&quot;: &quot;3fa85f64-5717-4562-b3fc-2c963f66afa6&quot;,
+  &quot;name&quot;: &quot;Window Cleaning&quot;,
+  &quot;price&quot;: 20000.00,
+  &quot;description&quot;: &quot;Interior and exterior window and glass cleaning&quot;,
+  &quot;status&quot;: &quot;ACTIVE&quot;
+}
+</code></pre></div>
+<p>(The cleaning depth response uses <code>cleaningDepthId</code> instead of <code>addOnId</code>.)</p>
+<h3 id="82-sites">8.2 Sites</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/sites</code></td>
+<td><code>SAVE_SITE</code></td>
+<td>Register a site</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/sites</code></td>
+<td><code>VIEW_SITE</code></td>
+<td>List sites</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/sites/{id}</code></td>
+<td><code>VIEW_SITE_BY_ID</code></td>
+<td>Get a site</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/sites/{id}</code></td>
+<td><code>UPDATE_SITE</code></td>
+<td>Update a site (full replacement; validated)</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/sites/{id}</code></td>
+<td><code>DELETE_SITE</code></td>
+<td>Soft delete</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request body:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;siteType&quot;: &quot;residential&quot;,
+  &quot;areaSqm&quot;: 120.5,
+  &quot;roomCount&quot;: 4,
+  &quot;addressArea&quot;: &quot;Mikocheni, Dar es Salaam&quot;,
+  &quot;longitude&quot;: &quot;39.2408&quot;,
+  &quot;latitude&quot;: &quot;-6.7618&quot;,
+  &quot;secured&quot;: true,
+  &quot;accessType&quot;: &quot;Gate pass&quot;,
+  &quot;serviceId&quot;: &quot;&lt;service uuid&gt;&quot;,
+  &quot;cleaningDepthId&quot;: &quot;&lt;cleaning depth uuid&gt;&quot;,
+  &quot;addOnIds&quot;: [&quot;&lt;add-on uuid&gt;&quot;, &quot;&lt;add-on uuid&gt;&quot;]
+}
+</code></pre></div>
+<p>Required: <code>siteType</code>, <code>areaSqm</code>, <code>roomCount</code>, <code>addressArea</code>, <code>longitude</code>, <code>latitude</code>, <code>serviceId</code>, and <code>cleaningDepthId</code> <strong>for Cleaning sites only</strong>. The service must exist and be ACTIVE (see <code>GET /services</code>). Fumigation and Property Management sites may omit <code>cleaningDepthId</code>.</p>
+<p>Response (abridged):</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;siteId&quot;: &quot;…&quot;,
+  &quot;siteType&quot;: &quot;residential&quot;,
+  &quot;areaSqm&quot;: 120.5,
+  &quot;roomCount&quot;: 4,
+  &quot;addressArea&quot;: &quot;Mikocheni, Dar es Salaam&quot;,
+  &quot;plotCoordinates&quot;: &quot;{latitude=-6.7618, longitude=39.2408}&quot;,
+  &quot;longitude&quot;: &quot;39.2408&quot;,
+  &quot;latitude&quot;: &quot;-6.7618&quot;,
+  &quot;secured&quot;: true,
+  &quot;accessType&quot;: &quot;Gate pass&quot;,
+  &quot;service&quot;: { &quot;serviceId&quot;: &quot;…&quot;, &quot;serviceName&quot;: &quot;Cleaning&quot;, &quot;status&quot;: &quot;ACTIVE&quot; },
+  &quot;cleaningDepth&quot;: { &quot;cleaningDepthId&quot;: &quot;…&quot;, &quot;name&quot;: &quot;Deep&quot;, &quot;price&quot;: 120000.00, &quot;description&quot;: &quot;…&quot;, &quot;status&quot;: &quot;ACTIVE&quot; },
+  &quot;addOns&quot;: [ { &quot;addOnId&quot;: &quot;…&quot;, &quot;name&quot;: &quot;Window Cleaning&quot;, &quot;price&quot;: 20000.00, &quot;description&quot;: &quot;…&quot;, &quot;status&quot;: &quot;ACTIVE&quot; } ],
+  &quot;totalPrice&quot;: 140000.00
+}
+</code></pre></div>
+<h3 id="83-leads">8.3 Leads</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/leads</code></td>
+<td><code>SAVE_LEAD</code></td>
+<td>Create a lead</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/leads/pagination</code></td>
+<td><code>VIEW_LEAD</code></td>
+<td>Paginated list; sort, filter by status, source, service line</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/leads</code></td>
+<td><code>VIEW_LEAD</code></td>
+<td>List leads</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/leads/{id}</code></td>
+<td><code>UPDATE_LEAD</code></td>
+<td>Update a lead</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/leads/{id}</code></td>
+<td><code>DELETE_LEAD</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/leads/{leadId}/status</code></td>
+<td><code>CHANGE_LEAD_STATUS</code></td>
+<td>Change lead status</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="84-quotes">8.4 Quotes</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/quotes</code></td>
+<td><code>SAVE_QUOTE</code></td>
+<td>Create a quote for a site</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/quotes</code></td>
+<td><code>VIEW_QUOTE</code></td>
+<td>List quotes</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/quotes/{id}</code></td>
+<td><code>VIEW_QUOTE_BY_ID</code></td>
+<td>Get a quote (with its site and line items)</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/quotes/{id}</code></td>
+<td><code>UPDATE_QUOTE</code></td>
+<td>Update a quote</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/quotes/{id}</code></td>
+<td><code>DELETE_QUOTE</code></td>
+<td>Soft delete</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/quotes/{id}/send</code></td>
+<td><code>SEND_QUOTE</code></td>
+<td>Mark quote as SENT</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/quotes/{id}/accept</code></td>
+<td><code>ACCEPT_QUOTE</code></td>
+<td>Mark quote as ACCEPTED</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/quotes/{id}/pdf</code></td>
+<td><code>DOWNLOAD_QUOTE_PDF</code></td>
+<td>Download the quotation as a PDF</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="85-invoices">8.5 Invoices</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/invoices</code></td>
+<td><code>VIEW_INVOICE</code></td>
+<td>List invoices</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/invoices/{id}</code></td>
+<td><code>VIEW_INVOICE_BY_ID</code></td>
+<td>Get an invoice</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/sites/{siteId}/invoices</code></td>
+<td><code>VIEW_SITE_INVOICES</code></td>
+<td>Invoices for a site</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/invoices/{id}/pdf</code></td>
+<td><code>DOWNLOAD_INVOICE_PDF</code></td>
+<td>Download the invoice as a PDF</td>
+</tr>
+</tbody>
+</table></div>
+<p>Invoices are created automatically when a site is registered; there is no create endpoint yet.</p>
+<p>Response:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;invoiceId&quot;: &quot;…&quot;,
+  &quot;invoiceNumber&quot;: &quot;INV-20261002-7K3Q9A&quot;,
+  &quot;quoteId&quot;: &quot;…&quot;,
+  &quot;siteId&quot;: &quot;…&quot;,
+  &quot;contractId&quot;: null,
+  &quot;items&quot;: [
+    { &quot;description&quot;: &quot;Cleaning depth: Deep&quot;, &quot;quantity&quot;: 1, &quot;unitPrice&quot;: 120000.00, &quot;amount&quot;: 120000.00 },
+    { &quot;description&quot;: &quot;Add-on: Window Cleaning&quot;, &quot;quantity&quot;: 1, &quot;unitPrice&quot;: 20000.00, &quot;amount&quot;: 20000.00 }
+  ],
+  &quot;amountDue&quot;: 140000.00,
+  &quot;issueDate&quot;: &quot;2026-10-02&quot;,
+  &quot;dueDate&quot;: &quot;2026-10-16&quot;,
+  &quot;status&quot;: &quot;PENDING&quot;
+}
+</code></pre></div>
+<h3 id="86-payments">8.6 Payments</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/invoices/{invoiceId}/payments</code></td>
+<td><code>PAY_INVOICE</code></td>
+<td>Pay an invoice by mobile money through the payment service</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/invoices/{invoiceId}/payments/cash</code></td>
+<td><code>RECORD_CASH_PAYMENT</code></td>
+<td>Record cash already received (saved as SUCCESS immediately)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/invoices/{invoiceId}/payments</code></td>
+<td><code>VIEW_INVOICE_PAYMENTS</code></td>
+<td>Payments for an invoice</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/payments</code></td>
+<td><code>VIEW_PAYMENT</code></td>
+<td>List payments</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/payments/{id}</code></td>
+<td><code>VIEW_PAYMENT_BY_ID</code></td>
+<td>Get a payment (poll this for the result)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/payments/{id}/receipt</code></td>
+<td><code>DOWNLOAD_PAYMENT_RECEIPT</code></td>
+<td>Download the PDF receipt of a SUCCESS payment</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request body:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;method&quot;: &quot;MOBILE_MONEY&quot;,
+  &quot;payerPhone&quot;: &quot;0712345678&quot;,
+  &quot;payerName&quot;: &quot;Jane Doe&quot;,
+  &quot;payerEmail&quot;: &quot;jane@example.com&quot;,
+  &quot;amount&quot;: 140000.00
+}
+</code></pre></div>
+<ul>
+<li><code>method</code> decides what the client does next:</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>method</code></th>
+<th>Sent to the payment service as</th>
+<th>What to show the client</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MOBILE_MONEY</code></td>
+<td><code>MOBILE_MONEY</code></td>
+<td>"Confirm the payment prompt on your phone" (PIN prompt on <code>payerPhone</code>)</td>
+</tr>
+<tr>
+<td><code>CARD</code></td>
+<td><code>CHECKOUT</code></td>
+<td>Open <code>paymentUrl</code> (hosted page; card payments there are USD-only, so TZS card payments go through checkout)</td>
+</tr>
+<tr>
+<td><code>CHECKOUT</code></td>
+<td><code>CHECKOUT</code></td>
+<td>Open <code>paymentUrl</code>; the client chooses how to pay</td>
+</tr>
+<tr>
+<td><code>BILLPAY</code></td>
+<td><code>BILLPAY</code></td>
+<td>"Pay control number <code>controlNumber</code> via mobile money, bank or agent"</td>
+</tr>
+<tr>
+<td><code>BANK</code></td>
+<td><code>BILLPAY</code></td>
+<td>Same control number, paid at the bank</td>
+</tr>
+<tr>
+<td><code>CASH</code></td>
+<td>(not sent)</td>
+<td>Use the cash endpoint below</td>
+</tr>
+<tr>
+<td><code>PAYPAL</code>, <code>STRIPE</code>, <code>OTHER</code></td>
+<td>(not sent)</td>
+<td>Rejected: not supported by the payment service</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><code>payerPhone</code> is required for <strong>every</strong> method (the payment service requires it); format <code>07XXXXXXXX</code>, <code>2557XXXXXXXX</code> or <code>+255 …</code>.</li>
+<li>With provider <code>SELCOM</code>, only <code>MOBILE_MONEY</code> and <code>CHECKOUT</code>/<code>CARD</code> work, and <code>payerEmail</code> is required; <code>BILLPAY</code>/<code>BANK</code> need ClickPesa.</li>
+<li><code>amount</code> is optional (defaults to the remaining balance).</li>
+<li><code>payerName</code> is optional (defaults to "KSC invoice <number>"). <code>payerEmail</code> is optional, but required if the provider is SELCOM.</li>
+</ul>
+<p>Cash request body (<code>POST /invoices/{invoiceId}/payments/cash</code>):</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;amount&quot;: 140000.00,
+  &quot;receiptNumber&quot;: &quot;RCPT-004512&quot;,
+  &quot;receivedAt&quot;: &quot;2026-10-02T09:30:00&quot;,
+  &quot;notes&quot;: &quot;Paid to site supervisor&quot;
+}
+</code></pre></div>
+<p><code>receiptNumber</code> is required; <code>amount</code> defaults to the remaining balance; <code>receivedAt</code> defaults to now and cannot be in the future.</p>
+<p>Response (immediately after the request; the status changes when the payment service replies):</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;paymentId&quot;: &quot;…&quot;,
+  &quot;invoiceId&quot;: &quot;…&quot;,
+  &quot;invoiceNumber&quot;: &quot;INV-20261002-7K3Q9A&quot;,
+  &quot;amount&quot;: 140000.00,
+  &quot;currency&quot;: &quot;TZS&quot;,
+  &quot;method&quot;: &quot;BANK&quot;,
+  &quot;payerPhone&quot;: &quot;0712345678&quot;,
+  &quot;status&quot;: &quot;PENDING&quot;,
+  &quot;providerRef&quot;: null,
+  &quot;failureReason&quot;: null,
+  &quot;notes&quot;: null,
+  &quot;receiptNumber&quot;: null,
+  &quot;paymentReference&quot;: &quot;PAYS5XADEP6HELUDUY47&quot;,
+  &quot;paymentUrl&quot;: null,
+  &quot;controlNumber&quot;: &quot;55042914871931&quot;,
+  &quot;requestedAt&quot;: &quot;2026-10-02T10:00:00&quot;,
+  &quot;paidAt&quot;: null
+}
+</code></pre></div>
+<p><code>paymentUrl</code> is set for <code>CARD</code>/<code>CHECKOUT</code>, <code>controlNumber</code> for <code>BILLPAY</code>/<code>BANK</code>; <code>paymentReference</code> is the payment service's reference to quote to support. <code>receiptNumber</code> is set once the payment succeeds.</p>
+<p>The invoice response also includes <code>amountPaid</code> and <code>balanceDue</code>.</p>
+<h3 id="87-contracts">8.7 Contracts</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/contracts</code></td>
+<td><code>SAVE_CONTRACT</code></td>
+<td>Create a DRAFT contract from an ACCEPTED quote</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/pagination</code></td>
+<td><code>VIEW_CONTRACTS</code></td>
+<td>Paginated list; filters <code>status</code>, <code>serviceLine</code>, <code>clientId</code>; <code>sortBy</code> createdAt, startDate, endDate, contractValue, status, contractNumber</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts</code></td>
+<td><code>VIEW_CONTRACT</code></td>
+<td>List contracts</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/expiring?days=30</code></td>
+<td><code>VIEW_EXPIRING_CONTRACTS</code></td>
+<td>ACTIVE contracts ending within <code>days</code> (0–365), soonest first</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/{id}</code></td>
+<td><code>VIEW_CONTRACT_BY_ID</code></td>
+<td>Get a contract</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/contracts/{id}</code></td>
+<td><code>UPDATE_CONTRACT</code></td>
+<td>Update a DRAFT contract</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/contracts/{id}</code></td>
+<td><code>DELETE_CONTRACT</code></td>
+<td>Soft delete a DRAFT or REJECTED contract (creator only)</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/contracts/{id}/send</code></td>
+<td><code>SEND_CONTRACT</code></td>
+<td>DRAFT → SENT</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/contracts/{id}/approve</code></td>
+<td><code>APPROVE_CONTRACT</code></td>
+<td>SENT → SIGNED (or ACTIVE): record the client's signature</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/contracts/{id}/reject</code></td>
+<td><code>REJECT_CONTRACT</code></td>
+<td>SENT → REJECTED, with a reason</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/contracts/{id}/terminate</code></td>
+<td><code>TERMINATE_CONTRACT</code></td>
+<td>SIGNED/ACTIVE → TERMINATED, with a reason</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/{id}/pdf</code></td>
+<td><code>DOWNLOAD_CONTRACT_PDF</code></td>
+<td>Download the contract as a PDF</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/{id}/invoices</code></td>
+<td><code>VIEW_CONTRACT_INVOICES</code></td>
+<td>Invoices linked to the contract, newest first (same fields as the invoice API)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/{id}/subscriptions</code></td>
+<td><code>VIEW_CONTRACT_SUBSCRIPTIONS</code></td>
+<td>Subscriptions under the contract, newest first (the contract is not repeated in each item)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/contracts/{id}/payments</code></td>
+<td><code>VIEW_CONTRACT_PAYMENTS</code></td>
+<td>Payments (mobile money and cash) for any of the contract's invoices, newest first</td>
+</tr>
+</tbody>
+</table></div>
+<p>Create / update body:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;quoteId&quot;: &quot;&lt;ACCEPTED quote uuid&gt;&quot;,
+  &quot;clientId&quot;: &quot;&lt;optional; defaults to the site owner&gt;&quot;,
+  &quot;startDate&quot;: &quot;2026-10-15&quot;,
+  &quot;endDate&quot;: &quot;2027-10-14&quot;,
+  &quot;frequency&quot;: &quot;MONTHLY&quot;,
+  &quot;contractValue&quot;: 2040000.00,
+  &quot;businessInfo&quot;: &quot;Mikocheni Apartments Ltd&quot;,
+  &quot;businessTin&quot;: &quot;123-456-789&quot;,
+  &quot;businessBrelaNo&quot;: &quot;BRELA-154872&quot;,
+  &quot;personalIdNo&quot;: null,
+  &quot;terms&quot;: null
+}
+</code></pre></div>
+<p><code>startDate</code> and <code>endDate</code> are required (end on or after start). <code>frequency</code> defaults to the quote's frequency (or ONCE) and <code>contractValue</code> to the quote total. <code>quoteId</code> is ignored on update. <code>terms</code> is printed on the PDF; default terms are used when it is empty.</p>
+<p>Approve (sign) body: <code>{ "signedBy": "Jane Doe", "signedAt": "2026-10-10T14:30:00" }</code> (<code>signedAt</code> optional, defaults to now, cannot be in the future).
+Reject / terminate body: <code>{ "reason": "Client moved to another provider" }</code>.</p>
+<h3 id="88-subscriptions">8.8 Subscriptions</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/subscriptions</code></td>
+<td><code>SAVE_SUBSCRIPTION</code></td>
+<td>Create a subscription under a contract</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/subscriptions</code></td>
+<td><code>VIEW_SUBSCRIPTIONS</code></td>
+<td>List</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/subscriptions/{subscriptionId}</code></td>
+<td><code>VIEW_SUBSCRIPTION_BY_ID</code></td>
+<td>Get one</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/subscriptions/{subscriptionId}</code></td>
+<td><code>UPDATE_SUBSCRIPTION</code></td>
+<td>Update (not implemented)</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/subscriptions/{subscriptionId}/cancel</code></td>
+<td><code>CANCEL_SUBSCRIPTION</code></td>
+<td>→ CANCELLED</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/subscriptions/{subscriptionId}/pause</code></td>
+<td><code>PAUSE_SUBSCRIPTION</code></td>
+<td>→ PAUSED</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/subscriptions/{subscriptionId}/resume</code></td>
+<td><code>RESUME_SUBSCRIPTION</code></td>
+<td>→ RESUMED</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/subscriptions/{subscriptionId}/renew</code></td>
+<td><code>RENEW_SUBSCRIPTION</code></td>
+<td>→ RENEWED</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="89-jobs">8.9 Jobs</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/jobs</code></td>
+<td><code>CREATE_JOB</code></td>
+<td>Create a job</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs</code></td>
+<td><code>VIEW_ALL_JOBS</code></td>
+<td>List jobs</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs/{jobId}</code></td>
+<td><code>VIEW_JOB_BY_ID</code></td>
+<td>Get a job</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/jobs/{jobId}</code></td>
+<td><code>UPDATE_JOB_BY_ID</code></td>
+<td>Update a job</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="crews">Crews</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/crews</code></td>
+<td><code>CREATE_CREW</code></td>
+<td>Create a crew</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/crews</code></td>
+<td><code>VIEW_ALL_CREWS</code></td>
+<td>List crews</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/crews/{crewId}</code></td>
+<td><code>VIEW_CREW_BY_ID</code></td>
+<td>Get a crew</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/crews/{crewId}</code></td>
+<td><code>UPDATE_CREW_BY_ID</code></td>
+<td>Update a crew</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/crews/{crewId}</code></td>
+<td><code>DELETE_CREW_BY_ID</code></td>
+<td>Delete a crew</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/crews/{crewId}/supervisor/{supervisorId}</code></td>
+<td><code>ASSIGN_SUPERVISOR_TO_CREW</code></td>
+<td>Assign supervisor</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/crews/{crewId}/members</code></td>
+<td><code>ADD_CREW_MEMBER</code></td>
+<td>Add a staff member to a crew: <code>{ "staffId", "staffName", "memberRole", "joinedOn" }</code></td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/crews/{crewId}/members</code></td>
+<td><code>VIEW_CREW_MEMBERS</code></td>
+<td>List a crew's members</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff/{staffId}/crews</code></td>
+<td><code>VIEW_CREW_MEMBERS</code></td>
+<td>Crews a staff member belongs to</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/crews/{crewId}/members/{staffId}</code></td>
+<td><code>REMOVE_CREW_MEMBER</code></td>
+<td>Remove a staff member from a crew (soft delete)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="checklists">Checklists</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/jobs/{jobId}/checklists</code></td>
+<td><code>CREATE_CHECKLIST</code></td>
+<td>Create a checklist for a job</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/checklist-items/{checklistItemId}</code></td>
+<td><code>VIEW_CHECKLIST_ITEM_BY_ID</code></td>
+<td>Get checklist item</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/checklist-items/{checklistItemId}</code></td>
+<td><code>UPDATE_CHECKLIST_ITEM_BY_ID</code></td>
+<td>Update checklist item</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/checklist-items/{checklistItemId}</code></td>
+<td><code>DELETE_CHECKLIST_ITEM_BY_ID</code></td>
+<td>Delete checklist item</td>
+</tr>
+</tbody>
+</table></div>
+<p>Other checklist operations (list/get/update/delete checklist, create/list checklist items) exist as methods but have <strong>no HTTP mapping</strong> yet.</p>
+<h4 id="time-tracking">Time tracking</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/jobs/{jobId}/clock-in</code></td>
+<td><code>CLOCK_IN</code></td>
+<td>Clock in (geofenced)</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/jobs/{jobId}/clock-out</code></td>
+<td><code>CLOCK_OUT</code></td>
+<td>Clock out (geofenced)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs/{jobId}/time-logs</code></td>
+<td><code>VIEW_TIME_LOGS</code></td>
+<td>Time logs for a job (not implemented)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/time-logs/{id}</code></td>
+<td><code>VIEW_TIME_LOG_BY_ID</code></td>
+<td>Get a time log (not implemented)</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/time-logs/{id}</code></td>
+<td><code>UPDATE_TIME_LOG</code></td>
+<td>Update a time log (not implemented)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff/{staffId}/attendance</code></td>
+<td><code>VIEW_STAFF_ATTENDANCE</code></td>
+<td>Staff attendance (not implemented)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="feedback">Feedback</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/feedbacks</code></td>
+<td><code>ADD_FEEDBACK</code></td>
+<td>Submit feedback</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/feedbacks</code></td>
+<td><code>VIEW_ALL_FEEDBACK</code></td>
+<td>List feedback</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/feedbacks/{feedbackId}</code></td>
+<td><code>VIEW_FEEDBACK_BY_ID</code></td>
+<td>Get feedback</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/feedbacks/{feedbackId}</code></td>
+<td><code>UPDATE_FEEDBACK</code></td>
+<td>Update feedback</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/feedbacks/{feedbackId}</code></td>
+<td><code>DELETE_FEEDBACK</code></td>
+<td>Delete feedback</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs/{jobId}/feedbacks</code></td>
+<td><code>VIEW_FEEDBACK_BY_JOB_ID</code></td>
+<td>Feedback for a job</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="staff-ratings">Staff ratings</h4>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/staff-ratings</code></td>
+<td><code>ADD_STAFF_RATING</code></td>
+<td>Add a rating</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff-ratings</code></td>
+<td><code>VIEW_ALL_STAFF_RATINGS</code></td>
+<td>List ratings</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff-ratings/{id}</code></td>
+<td><code>VIEW_STAFF_RATING_BY_ID</code></td>
+<td>Get a rating</td>
+</tr>
+<tr>
+<td><span class="method m-put">PUT</span></td>
+<td><code>/staff-ratings/{id}</code></td>
+<td><code>UPDATE_STAFF_RATING</code></td>
+<td>Update a rating</td>
+</tr>
+<tr>
+<td><span class="method m-delete">DELETE</span></td>
+<td><code>/staff-ratings/{id}</code></td>
+<td><code>DELETE_STAFF_RATING</code></td>
+<td>Delete a rating</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff/{staffId}/ratings</code></td>
+<td><code>VIEW_STAFF_RATINGS</code></td>
+<td>Ratings for a staff member</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/staff/{staffId}/rating-summary</code></td>
+<td><code>VIEW_STAFF_RATING_SUMMARY</code></td>
+<td>Rating summary for a staff member</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs/{jobId}/staff-ratings</code></td>
+<td><code>VIEW_JOB_STAFF_RATINGS</code></td>
+<td>Ratings for a job</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/jobs/{jobId}/staff-ratings/summary</code></td>
+<td><code>VIEW_JOB_STAFF_RATING_SUMMARY</code></td>
+<td>Rating summary for a job</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="810-file-management-apifile-upload">8.10 File management (<code>/api/file-upload</code>)</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/uploads</code></td>
+<td>Upload a multipart file</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/uploads/base64/multipart</code></td>
+<td>Upload base64 content (multipart form)</td>
+</tr>
+<tr>
+<td><span class="method m-post">POST</span></td>
+<td><code>/uploads/base64</code></td>
+<td>Upload base64 content</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/download/file</code></td>
+<td>Download a file</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/download/base64/{id}</code></td>
+<td>Download as base64 by upload ID</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/download/base64/names/{fileName}</code></td>
+<td>Download as base64 by file name</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/download/names/{fileName}</code></td>
+<td>Download by file name</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="811-dashboards">8.11 Dashboards</h3>
+<div class="table-wrap"><table class="endpoints">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/admin?from=2026-09-04&amp;to=2026-10-03</code></td>
+<td><code>VIEW_ADMIN_DASHBOARD</code></td>
+<td>Super admin dashboard; <code>from</code>/<code>to</code> optional (default last 30 days, max 366 days)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/client</code></td>
+<td><code>VIEW_CLIENT_DASHBOARD</code></td>
+<td>Dashboard of the signed-in client</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/clients/{clientId}</code></td>
+<td><code>VIEW_ADMIN_DASHBOARD</code></td>
+<td>Any client's dashboard, for super admins</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/staff</code></td>
+<td><code>VIEW_STAFF_DASHBOARD</code></td>
+<td>Dashboard of the signed-in staff member</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/staff/{staffId}</code></td>
+<td><code>VIEW_ADMIN_DASHBOARD</code></td>
+<td>Any staff member's dashboard, for super admins</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/supervisor?from=&amp;to=</code></td>
+<td><code>VIEW_SUPERVISOR_DASHBOARD</code></td>
+<td>Dashboard of the signed-in supervisor; period optional (default last 30 days)</td>
+</tr>
+<tr>
+<td><span class="method m-get">GET</span></td>
+<td><code>/dashboard/supervisors/{supervisorId}?from=&amp;to=</code></td>
+<td><code>VIEW_ADMIN_DASHBOARD</code></td>
+<td>Any supervisor's dashboard, for super admins</td>
+</tr>
+</tbody>
+</table></div>
+<p>The response <code>data</code> is the JSON returned by the database function; see <a href="#913-dashboards">Dashboards</a>.</p>
+<h3 id="812-not-yet-exposed">8.12 Not yet exposed</h3>
+<p><code>ReportController</code> and <code>JobPhotoController</code> exist but define no endpoints.</p>
+<hr />
+<h2 id="9-business-rules">9. Business rules</h2>
+<h3 id="91-site-pricing">9.1 Site pricing</h3>
+<p>Implemented in <code>SiteServiceImpl.applyPricing</code> using <code>PricingItemResolver</code>:</p>
+<ol>
+<li><code>cleaningDepthId</code> depends on the site's <strong>service</strong>:</li>
+<li><strong>Cleaning</strong> (any service whose name maps to a <code>*CLEANING</code> type): <strong>required</strong> ("Cleaning depth must be provided for Cleaning sites").</li>
+<li><strong>Fumigation, Property Management</strong> and other services: <strong>optional</strong>. If given, it is priced as usual.</li>
+<li>When given, it must be a valid UUID of an existing cleaning depth with status <code>ACTIVE</code>.</li>
+<li><code>addOnIds</code> is <strong>optional</strong> (may be empty). Every ID must be a valid UUID of an existing add-on with status <code>ACTIVE</code>; duplicate IDs are collapsed. If any ID is missing the whole request fails ("One or more add-ons not found").</li>
+<li><strong>Total price</strong> is calculated on the server:</li>
+</ol>
+<p><code>totalPrice = (service.price, or 0 if none) + (cleaningDepth.price, or 0 if none) + Σ addOn.price</code></p>
+<p>Examples: Cleaning site, Deep (120,000) + Window Cleaning (20,000) = <strong>140,000 TZS</strong>. Fumigation site (service price 150,000) + Window Cleaning (20,000) = <strong>170,000 TZS</strong>.
+4. <code>totalPrice</code> is <strong>stored</strong> on the site when it is created or updated. Later changes to cleaning-depth or add-on prices do <strong>not</strong> change existing sites until the site itself is updated.
+5. On update, <code>addOnIds</code> <strong>replaces</strong> the site's existing add-ons.
+6. <code>totalPrice</code> is read-only. Clients cannot set it.</p>
+<h3 id="92-master-data">9.2 Master data</h3>
+<ul>
+<li>Cleaning depth and add-on <strong>names are unique</strong> (case-insensitive) among non-deleted records; prices must be <strong>≥ 0</strong>.</li>
+<li>New services, slots, cleaning depths and add-ons start as <code>ACTIVE</code>.</li>
+<li><code>INACTIVE</code> cleaning depths and add-ons cannot be selected for sites.</li>
+<li>Slot <code>endDateTime</code> must be strictly after <code>startDateTime</code>.</li>
+<li>Status change accepts <code>ACTIVE</code> or <code>INACTIVE</code> (case-insensitive); anything else returns "Invalid status value".</li>
+</ul>
+<h3 id="93-leads">9.3 Leads</h3>
+<ul>
+<li>Status can be changed directly via <code>PUT /leads/{leadId}/status</code> to any <code>LeadStatus</code> value.</li>
+</ul>
+<h3 id="94-quotes">9.4 Quotes</h3>
+<ul>
+<li>A quote requires an existing site.</li>
+<li><code>send</code> sets status <code>SENT</code>; <code>accept</code> sets status <code>ACCEPTED</code>. An accepted quote locks the site's pricing (see <a href="#99-quotation-and-invoice-generation">9.9</a>).</li>
+</ul>
+<h3 id="95-contracts">9.5 Contracts</h3>
+<p><strong>Lifecycle</strong> (<code>ContractStatus</code>):</p>
+<div class="diagram-wrap"><pre class="diagram"><code>DRAFT ──send──► SENT ──approve──► SIGNED ──start date──► ACTIVE ──end date──► EXPIRED
+                  │                   │                     │
+                  └──reject──► REJECTED                     │
+                                      └─────terminate───────┴──► TERMINATED
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Allowed from</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td>quote is <strong>ACCEPTED</strong> and has no live contract</td>
+<td>DRAFT, signature PENDING, number <code>CT-yyyyMMdd-XXXXXX</code></td>
+</tr>
+<tr>
+<td>Update</td>
+<td>DRAFT</td>
+<td>dates, frequency, value, client and business details, terms</td>
+</tr>
+<tr>
+<td>Delete</td>
+<td>DRAFT, REJECTED (creator only)</td>
+<td>soft delete; the quote can get a new contract</td>
+</tr>
+<tr>
+<td>Send</td>
+<td>DRAFT</td>
+<td>SENT, <code>sentAt</code></td>
+</tr>
+<tr>
+<td>Approve (sign)</td>
+<td>SENT, end date not passed</td>
+<td>signature SIGNED, <code>signedBy</code>/<code>signedAt</code>; status <strong>ACTIVE</strong> if the start date has arrived, otherwise <strong>SIGNED</strong></td>
+</tr>
+<tr>
+<td>Reject</td>
+<td>SENT</td>
+<td>REJECTED, signature REJECTED, <code>rejectionReason</code></td>
+</tr>
+<tr>
+<td>Terminate</td>
+<td>SIGNED, ACTIVE</td>
+<td>TERMINATED, <code>terminationReason</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Any other transition is rejected with a message naming the current and allowed statuses.</p>
+<p><strong>On create</strong>, the contract takes its site and service type from the quote, <code>clientId</code> defaults to the site owner, <code>frequency</code> to the quote's frequency (or ONCE), and <code>contractValue</code> to the quote total. The quote's non-cancelled invoices that have no contract yet are <strong>linked to the new contract</strong> (<code>invoices.contract_id</code>). The quote was already ACCEPTED, so the site's pricing is locked (see 9.9).</p>
+<p><strong>Daily lifecycle job</strong> (<code>ContractLifecycleJob</code>, cron <code>ksc.contract.lifecycle-cron</code>, default 00:15 every day, plus one run about a minute after startup):
+- SIGNED contracts whose start date has arrived become <strong>ACTIVE</strong> (or <strong>EXPIRED</strong> if their end date has also passed).
+- ACTIVE contracts whose end date has passed become <strong>EXPIRED</strong>.</p>
+<p><strong>Contract PDF</strong> (<code>GET /contracts/{id}/pdf</code>, <code>ContractPdfRenderer</code>, PDFBox): company header with contract number, date and status; service provider and client details (business info, TIN, BRELA, ID number, site); contract details (service, period, frequency, value, quotation); the quote's line items as scope and pricing; terms (the contract's own, or default placeholder terms); and signature blocks, showing who signed for the client once signed. Generated on request; <code>pdf_url</code> is optional and not used by KSC.</p>
+<h3 id="96-subscriptions">9.6 Subscriptions</h3>
+<ul>
+<li>A subscription requires a contract.</li>
+<li>Lifecycle actions set status directly: cancel → <code>CANCELLED</code>, pause → <code>PAUSED</code>, resume → <code>RESUMED</code>, renew → <code>RENEWED</code>.</li>
+</ul>
+<h3 id="97-jobs">9.7 Jobs</h3>
+<ul>
+<li>Creating a job requires a contract, subscription, site and crew.</li>
+</ul>
+<h3 id="98-clock-in-clock-out-geofence">9.8 Clock-in / clock-out geofence</h3>
+<p>Implemented in <code>TimeLogServiceImpl</code>:
+- The request must include the user's coordinates (<code>latitude,longitude</code>), and the job's site must have coordinates configured.
+- The distance between the user and the site is calculated (great-circle distance in metres).
+- If the distance is <strong>more than 10 metres</strong>, clock-in/out is rejected ("You are out of the job site geofence zone…").
+- Otherwise the time log is saved with status <code>IN_SITE</code>.</p>
+<hr />
+<h3 id="99-quotation-and-invoice-generation">9.9 Quotation and invoice generation</h3>
+<p>When a site is registered (<code>POST /sites</code>), <code>SiteServiceImpl.addSite</code> does the following in <strong>one transaction</strong>. If any step fails, nothing is saved.</p>
+<ol>
+<li>Saves the site with its calculated <code>totalPrice</code> (see <a href="#91-site-pricing">Site pricing</a>).</li>
+<li><strong>Generates a quotation</strong> (<code>QuoteService.generateForSite</code>). Skipped entirely, with no quote or invoice, when the site has <strong>nothing priced</strong>: no service price, no cleaning depth and no add-ons; the response then has no quote/invoice IDs. Updating the site later to add a priced item generates them.</li>
+<li>number <code>QT-yyyyMMdd-XXXXXX</code></li>
+<li>status <strong>DRAFT</strong>, service type from the site's service (<code>Cleaning</code> → <code>CLEANING</code>, <code>Fumigation</code> → <code>FUMIGATION</code>, <code>Property Management</code> → <code>PROPERTY_MANAGEMENT</code>; unmatched names → <code>OTHER</code>), frequency <code>ONCE</code>, area from the site</li>
+<li>line items: the service's fixed price (if it has one, e.g. "Service: Fumigation"), then the cleaning depth (if any), then one per add-on (sorted by name), each quantity 1 at its current price</li>
+<li><code>priceMin</code> = <code>priceMax</code> = site <code>totalPrice</code></li>
+<li>valid for <strong>30 days</strong></li>
+<li><strong>Generates an invoice</strong> from that quotation (<code>InvoiceService.generateForQuote</code>):</li>
+<li>number <code>INV-yyyyMMdd-XXXXXX</code></li>
+<li>status <strong>PENDING</strong>, linked to the quote and site (no contract yet)</li>
+<li>a copy of the quote's line items, <code>amountDue</code> = quote total</li>
+<li>issue date today, due in <strong>14 days</strong></li>
+<li>Returns the site with <code>quoteId</code>, <code>quoteNumber</code>, <code>invoiceId</code> and <code>invoiceNumber</code>.</li>
+</ol>
+<p><code>GET /sites</code> and <code>GET /sites/{id}</code> also return <code>quoteId</code>, <code>quoteNumber</code>, <code>invoiceId</code> and <code>invoiceNumber</code> for each site's <strong>current</strong> documents: its latest quote that is not EXPIRED or REJECTED, and its latest invoice that is not CANCELLED. They are <code>null</code> when the site has none (e.g. nothing priced). The list loads them with two queries in total, not per site.</p>
+<p><code>GET /sites/{id}</code> additionally embeds the full documents:
+- <code>quote</code>: the current quotation (same fields as the quote API, including <code>items</code>, but without repeating the site).
+- <code>invoice</code>: the current invoice, including <code>items</code>, <code>amountDue</code>, <code>amountPaid</code>, <code>balanceDue</code>, dates and status.
+- <code>payments</code>: <strong>every</strong> payment for any of the site's invoices (including superseded/cancelled ones), newest first, with the same fields as the payments API. Each carries its <code>invoiceNumber</code>. Empty list when there are none.</p>
+<p><code>quote</code> and <code>invoice</code> are omitted when the site has none. None of the three is included in the list.</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;siteId&quot;: &quot;…&quot;,
+  &quot;service&quot;: { &quot;serviceId&quot;: &quot;…&quot;, &quot;serviceName&quot;: &quot;Fumigation&quot;, &quot;price&quot;: 150000.00, &quot;status&quot;: &quot;ACTIVE&quot; },
+  &quot;totalPrice&quot;: 150000.00,
+  &quot;quoteId&quot;: &quot;…&quot;, &quot;quoteNumber&quot;: &quot;QT-20261002-7K3Q9A&quot;,
+  &quot;invoiceId&quot;: &quot;…&quot;, &quot;invoiceNumber&quot;: &quot;INV-20261002-M4P2XR&quot;,
+  &quot;quote&quot;: {
+    &quot;quoteId&quot;: &quot;…&quot;, &quot;quoteNumber&quot;: &quot;QT-20261002-7K3Q9A&quot;, &quot;siteId&quot;: &quot;…&quot;,
+    &quot;serviceLine&quot;: &quot;FUMIGATION&quot;, &quot;status&quot;: &quot;DRAFT&quot;, &quot;validUntil&quot;: &quot;2026-11-01&quot;,
+    &quot;priceMin&quot;: 150000.00, &quot;priceMax&quot;: 150000.00,
+    &quot;items&quot;: [ { &quot;description&quot;: &quot;Service: Fumigation&quot;, &quot;quantity&quot;: 1, &quot;unitPrice&quot;: 150000.00, &quot;amount&quot;: 150000.00 } ]
+  },
+  &quot;invoice&quot;: {
+    &quot;invoiceId&quot;: &quot;…&quot;, &quot;invoiceNumber&quot;: &quot;INV-20261002-M4P2XR&quot;, &quot;quoteId&quot;: &quot;…&quot;, &quot;siteId&quot;: &quot;…&quot;, &quot;contractId&quot;: null,
+    &quot;items&quot;: [ { &quot;description&quot;: &quot;Service: Fumigation&quot;, &quot;quantity&quot;: 1, &quot;unitPrice&quot;: 150000.00, &quot;amount&quot;: 150000.00 } ],
+    &quot;amountDue&quot;: 150000.00, &quot;amountPaid&quot;: 0, &quot;balanceDue&quot;: 150000.00,
+    &quot;issueDate&quot;: &quot;2026-10-02&quot;, &quot;dueDate&quot;: &quot;2026-10-16&quot;, &quot;status&quot;: &quot;PENDING&quot;
+  },
+  &quot;payments&quot;: [
+    {
+      &quot;paymentId&quot;: &quot;…&quot;, &quot;invoiceId&quot;: &quot;…&quot;, &quot;invoiceNumber&quot;: &quot;INV-20261002-M4P2XR&quot;,
+      &quot;amount&quot;: 150000.00, &quot;currency&quot;: &quot;TZS&quot;, &quot;method&quot;: &quot;MOBILE_MONEY&quot;, &quot;payerPhone&quot;: &quot;0712345678&quot;,
+      &quot;status&quot;: &quot;PROCESSING&quot;, &quot;providerRef&quot;: null, &quot;failureReason&quot;: null, &quot;notes&quot;: null,
+      &quot;requestedAt&quot;: &quot;2026-10-02T10:00:00&quot;, &quot;paidAt&quot;: null
+    }
+  ]
+}
+</code></pre></div>
+<p>Line items are stored copies, so later price changes don't alter existing quotes or invoices.</p>
+<h4 id="on-site-update-put-sitesid">On site update (<code>PUT /sites/{id}</code>)</h4>
+<p>The update recalculates the site's line items and total from the selected cleaning depth and add-ons at <strong>current</strong> prices, and compares them with the site's <em>current quote</em> (its latest quote that is not EXPIRED or REJECTED):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Line items, total and service type unchanged</td>
+<td>Site saved; quote and invoice untouched</td>
+</tr>
+<tr>
+<td>Service type changed (e.g. Cleaning → Fumigation)</td>
+<td>Treated like a pricing change: documents are regenerated (subject to the same locks below)</td>
+</tr>
+<tr>
+<td>Pricing changed, current quote DRAFT or SENT, no settled invoice</td>
+<td>Open quotes (DRAFT/SENT) → <strong>EXPIRED</strong>, PENDING invoices → <strong>CANCELLED</strong>, then a new DRAFT quote and PENDING invoice are generated with new numbers. Their IDs/numbers are returned in the response.</td>
+</tr>
+<tr>
+<td>Pricing changed, current quote <strong>ACCEPTED</strong></td>
+<td>Update <strong>rejected</strong>: "Quotation QT-… for this site has been accepted, so its cleaning depth and add-ons can no longer be changed."</td>
+</tr>
+<tr>
+<td>Pricing changed, a site invoice is neither PENDING nor CANCELLED (PARTIALLY_PAID or PAID)</td>
+<td>Update <strong>rejected</strong> with a similar message naming the invoice</td>
+</tr>
+<tr>
+<td>Pricing changed, a payment for the site is still in progress (PENDING/PROCESSING)</td>
+<td>Update <strong>rejected</strong> until the payment service reports the result</td>
+</tr>
+<tr>
+<td>Site has no quote yet (registered before this feature)</td>
+<td>Treated as a pricing change: a quote and invoice are generated</td>
+</tr>
+</tbody>
+</table></div>
+<p>"Pricing changed" also covers a master-data price change: if an add-on's price was edited after the quote was issued, the next site update regenerates the documents at the new price. Superseded quotes and invoices are kept for history. Changes to non-price fields (address, access type, rooms, etc.) never regenerate documents; the PDFs always show the current site details.</p>
+<h3 id="910-quotation-and-invoice-pdfs">9.10 Quotation and invoice PDFs</h3>
+<p><code>GET /quotes/{id}/pdf</code> and <code>GET /invoices/{id}/pdf</code> return an A4 PDF (<code>application/pdf</code>, downloaded as <code>&lt;number&gt;.pdf</code>).</p>
+<ul>
+<li>PDFs are <strong>generated on request</strong> from the stored record by <code>BillingPdfRenderer</code> (Apache PDFBox), so they always match the current quote/invoice. They are not saved to disk; <code>pdf_url</code> / <code>pdf_local_url</code> stay unused.</li>
+<li>Layout: company header, document title and number, date, valid-until/due date, status, <strong>Bill to</strong> (site address, type, area, rooms, service, site reference), a line-item table (description, quantity, unit price, amount), the TZS total, and notes (validity or payment terms, quote reference).</li>
+<li>Long item lists continue onto further pages with the table header repeated; long descriptions wrap. Characters the built-in PDF fonts cannot print are shown as <code>?</code>.</li>
+<li>Manually created quotes without line items print a single service line at the upper price estimate, with a note showing the price range.</li>
+<li>Company details on the documents come from the <code>ksc.company.*</code> properties (see <a href="#13-configuration">Configuration</a>).</li>
+</ul>
+<h3 id="911-payment-service-integration">9.11 Payment service integration</h3>
+<p>KSC does not talk to payment providers itself. It starts payments through the platform <strong>payment service</strong> (Eureka name <code>payment-service</code>) over REST, and receives outcomes on Kafka. The payment service's own contract is in <code>payment-service/docs/INTEGRATION.md</code>.</p>
+<div class="diagram-wrap"><pre class="diagram"><code>Client ──POST /invoices/{id}/payments──► KSC ──POST /api/v2/payments/{provider}──► Payment service ──► ClickPesa / Selcom
+   (mobile money, card/checkout link, BillPay control number)
+                                          ▲                                               │
+                                          └──────────── ksc.payment.results ◄─────────────┘
+</code></pre></div>
+<p><strong>1. Paying an invoice</strong> (<code>POST /invoices/{invoiceId}/payments</code>). <code>PaymentServiceImpl.initiatePayment</code> runs in three steps so the HTTP call is never inside a database transaction:</p>
+<ol>
+<li><strong>Save</strong> (transaction 1): checks the invoice is PENDING or PARTIALLY_PAID with no payment in progress, resolves the amount, and saves a <code>Payment</code> with status <strong>PENDING</strong>.</li>
+<li><strong>Call the payment service</strong> (no transaction): <code>POST /api/v2/payments/{provider}</code> via the Feign client <code>PaymentServiceClient</code>, forwarding the caller's bearer token (the platform has no service-to-service token). At the payment service a payment belongs to the <strong>system plus reference</strong> (<code>KSC</code> + the KSC payment ID), not to the caller: any authenticated caller can retry that reference or read its status with <code>GET /api/v2/payments/{provider}/{reference}?system=KSC</code>, and each attempt records who started it. KSC itself never reads payments back; results arrive on Kafka.</li>
+<li><strong>Apply the answer</strong> (transaction 2), only if the payment is still PENDING (a Kafka result that arrived first always wins):</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Payment service answer</th>
+<th>Payment becomes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accepted with <code>data.status</code> PROCESSING</td>
+<td><strong>PROCESSING</strong>: the client confirms the prompt on their phone (mobile money)</td>
+</tr>
+<tr>
+<td>Accepted with <code>data.status</code> CREATED/PENDING</td>
+<td><strong>PENDING</strong>: waiting for the client to pay via <code>paymentUrl</code> or <code>controlNumber</code>, which are stored on the payment along with <code>paymentReference</code></td>
+</tr>
+<tr>
+<td>Accepted but <code>data.status</code> FAILED/CANCELLED</td>
+<td><strong>FAILED</strong> with the payment service's message</td>
+</tr>
+<tr>
+<td>HTTP 4xx (validation, gateway rejection, duplicate)</td>
+<td><strong>FAILED</strong> with the error <code>message</code></td>
+</tr>
+<tr>
+<td>HTTP 5xx, timeout or connection error</td>
+<td>Stays <strong>PROCESSING</strong>: the request may still have reached the payment service, so KSC waits for its Kafka result instead of allowing a second attempt (which could prompt the client twice)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Request sent to the payment service:</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;system&quot;: &quot;KSC&quot;,
+  &quot;reference&quot;: &quot;&lt;KSC payment UUID&gt;&quot;,
+  &quot;method&quot;: &quot;MOBILE_MONEY&quot;,
+  &quot;amount&quot;: 140000.00,
+  &quot;currency&quot;: &quot;TZS&quot;,
+  &quot;description&quot;: &quot;Payment for invoice INV-20261002-7K3Q9A&quot;,
+  &quot;customerName&quot;: &quot;Jane Doe&quot;,
+  &quot;customerEmail&quot;: &quot;jane@example.com&quot;,
+  &quot;phoneNumber&quot;: &quot;0712345678&quot;,
+  &quot;phone&quot;: &quot;0712345678&quot;,
+  &quot;customer&quot;: { &quot;name&quot;: &quot;Jane Doe&quot;, &quot;phone&quot;: &quot;0712345678&quot;, &quot;email&quot;: &quot;jane@example.com&quot; }
+}
+</code></pre></div>
+<p><code>reference</code> is the KSC payment ID; it is how results are matched back.</p>
+<p><strong>Timeout sweep</strong> (<code>PaymentResultTimeoutJob</code>): payments that are still CREATED, PENDING or PROCESSING too long after they were created are marked <strong>FAILED</strong>. The limit depends on the method: <strong>mobile money</strong> <code>ksc.payment.result-timeout-minutes</code> (default <strong>120</strong>); <strong>link / control-number methods</strong> (CARD, CHECKOUT, BILLPAY, BANK) <code>ksc.payment.hosted-result-timeout-minutes</code> (default <strong>780</strong>, because the payment service waits up to 12 hours for those clients to pay). They get the reason "No result from the payment service". This frees invoices (and site pricing) whose request never reached the payment service. The payment service fails unanswered phone prompts after about 30 minutes and always sends a final event for payments it knows about, so a real payment normally resolves well before the sweep. A SUCCESS that arrives after the sweep is still recorded (see late payments below). The job uses the same in-progress status set as the "payment in progress" checks, so the two cannot drift.</p>
+<p><strong>2. Receiving the result</strong> (<code>ksc.payment.results</code>, consumer group <code>ksc-payment-results</code>). Events for any system other than <code>KSC</code> are skipped.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Event <code>status</code></th>
+<th>Effect in KSC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROCESSING</code></td>
+<td>Payment → PROCESSING; provider reference stored</td>
+</tr>
+<tr>
+<td><code>SUCCESS</code></td>
+<td>Payment → SUCCESS with <code>paidAt</code> and provider reference; the amount is added to the invoice's <code>amountPaid</code>, <strong>capped at the remaining balance</strong>. Invoice → <strong>PAID</strong> when fully covered, otherwise <strong>PARTIALLY_PAID</strong></td>
+</tr>
+<tr>
+<td><code>FAILED</code> / <code>CANCELLED</code></td>
+<td>Payment → FAILED / CANCELLED with <code>failureReason</code>; invoice unchanged</td>
+</tr>
+<tr>
+<td><code>REFUNDED</code></td>
+<td>Currently ignored (logged)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Safeguards:
+- <strong>Late payments:</strong> a payment that is FAILED or CANCELLED can still become SUCCESS if the money arrives late; it is recorded. Any amount beyond what the invoice still owes (e.g. staff already took cash) is not counted and is logged at ERROR as needing a refund.
+- <strong>Redelivery:</strong> repeated events for a settled payment (SUCCESS→SUCCESS, FAILED→FAILED/CANCELLED) are ignored.
+- Results for an unknown payment, with an unknown status, or that cannot be parsed are logged and skipped.
+- A SUCCESS for an invoice CANCELLED meanwhile is recorded on the payment only and logged as an error (refund needed).</p>
+<p>Event KSC reads (fields used; others are ignored):</p>
+<div class="code-wrap"><pre><code class="language-json">{
+  &quot;eventId&quot;: &quot;5c0f8e1e-6a8e-4d55-9a8f-2f8c3b1d7e21&quot;,
+  &quot;system&quot;: &quot;KSC&quot;,
+  &quot;reference&quot;: &quot;&lt;KSC payment UUID&gt;&quot;,
+  &quot;status&quot;: &quot;SUCCESS&quot;,
+  &quot;amount&quot;: 140000,
+  &quot;currency&quot;: &quot;TZS&quot;,
+  &quot;providerReference&quot;: &quot;MP261001.1234.A12345&quot;,
+  &quot;method&quot;: &quot;MOBILE_MONEY&quot;,
+  &quot;paidAt&quot;: &quot;2026-10-02T10:15:30&quot;,
+  &quot;failureReason&quot;: null
+}
+</code></pre></div>
+<p><code>reference</code> maps to <code>paymentId</code> and <code>providerReference</code> to <code>providerRef</code> (<code>PaymentResultMessage</code>, via <code>@JsonAlias</code>).</p>
+<p><strong>Cash payments</strong> (<code>POST /invoices/{invoiceId}/payments/cash</code>) bypass the payment service:
+- Same invoice checks as above (PENDING or PARTIALLY_PAID, no payment in progress, amount within the balance).
+- Saved straight away as a <code>CASH</code> payment with status <strong>SUCCESS</strong>; the receipt number is stored in <code>providerRef</code>, plus <code>paidAt</code> (= <code>receivedAt</code>) and optional <code>notes</code>.
+- The invoice's <code>amountPaid</code> and status are updated exactly as for a SUCCESS result.
+- The same receipt number cannot be recorded twice for one invoice.</p>
+<h3 id="912-payment-receipts">9.12 Payment receipts</h3>
+<p><code>GET /payments/{id}/receipt</code> returns an A4 PDF receipt (<code>ReceiptPdfRenderer</code>, PDFBox), downloaded as <code>&lt;receiptNumber&gt;.pdf</code>.</p>
+<ul>
+<li>Only for payments with status <strong>SUCCESS</strong> (mobile money, card/checkout, BillPay or cash); any other status is rejected ("a receipt is only available once it has succeeded").</li>
+<li><strong>Receipt number</strong> <code>RCT-yyyyMMdd-XXXXXX</code> is assigned when the payment succeeds: on the payment service's SUCCESS result, or immediately for cash. Payments that succeeded before receipts existed get a number on their first receipt request. The number is returned as <code>receiptNumber</code> in payment responses and never changes.</li>
+<li>Content: company header with receipt number, date and PAID status; <strong>Received from</strong> (the invoice's site); the <strong>amount received</strong>; payment details (paid on, method, transaction reference or cash receipt number, payment service reference, payer phone, note); and the invoice's total, <strong>paid to date</strong> (as of the download date), <strong>balance remaining</strong> and status.</li>
+<li>Generated on request from current data, like quotations, invoices and contracts. Nothing is stored except the receipt number.</li>
+</ul>
+<h3 id="913-dashboards">9.13 Dashboards</h3>
+<p>All dashboards are computed <strong>entirely in PostgreSQL</strong> by database functions; <code>DashboardService</code> calls them through <code>JdbcTemplate</code> and returns their JSON unchanged (money amounts keep their exact decimals).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Used by</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ksc_admin_dashboard(p_from date, p_to date)</code></td>
+<td><code>GET /dashboard/admin</code></td>
+<td><code>jsonb</code> with company-wide figures</td>
+</tr>
+<tr>
+<td><code>ksc_client_dashboard(p_client_id text)</code></td>
+<td><code>GET /dashboard/client</code>, <code>GET /dashboard/clients/{clientId}</code></td>
+<td><code>jsonb</code> for one client</td>
+</tr>
+<tr>
+<td><code>ksc_staff_dashboard(p_staff_id text)</code></td>
+<td><code>GET /dashboard/staff</code>, <code>GET /dashboard/staff/{staffId}</code></td>
+<td><code>jsonb</code> for one staff member</td>
+</tr>
+<tr>
+<td><code>ksc_supervisor_dashboard(p_supervisor_id text, p_from date, p_to date)</code></td>
+<td><code>GET /dashboard/supervisor</code>, <code>GET /dashboard/supervisors/{supervisorId}</code></td>
+<td><code>jsonb</code> for one supervisor's crews</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Installation.</strong> The function source lives in <code>src/main/resources/db/functions/</code> (one <code>CREATE OR REPLACE FUNCTION</code> per file, run in file-name order). <code>DashboardFunctionInstaller</code> runs every file when the application is ready, so the database always has the version that matches the code. Disable with <code>ksc.dashboard.install-functions=false</code> (then run the files by hand, e.g. <code>psql -f 01_ksc_admin_dashboard.sql</code>). An install failure is logged and does not stop the application; the endpoints then answer "Dashboard is unavailable: database function … failed or is not installed". The database user needs permission to create functions in the schema (on PostgreSQL 15+ the <code>public</code> schema only allows this for its owner by default).</p>
+<p>All queries ignore soft-deleted rows (<code>deleted_at</code> set). Both functions are <code>plpgsql</code>, so a missing column is reported when the function runs rather than when it is installed.</p>
+<p><strong>Super admin</strong> (<code>ksc_admin_dashboard</code>). <code>from</code>/<code>to</code> (inclusive) bound the <em>in-period</em> figures; everything else is the current position.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>period</code></td>
+<td><code>from</code>, <code>to</code></td>
+</tr>
+<tr>
+<td><code>sites</code></td>
+<td><code>total</code>, <code>newInPeriod</code>, <code>byService</code> (<code>service</code>, <code>count</code>, <code>totalValue</code>)</td>
+</tr>
+<tr>
+<td><code>leads</code></td>
+<td><code>total</code>, <code>newInPeriod</code>, <code>byStatus</code></td>
+</tr>
+<tr>
+<td><code>quotes</code></td>
+<td><code>byStatus</code></td>
+</tr>
+<tr>
+<td><code>contracts</code></td>
+<td><code>byStatus</code>, <code>activeCount</code>, <code>activeValue</code>, <code>expiringIn30Days</code></td>
+</tr>
+<tr>
+<td><code>subscriptions</code></td>
+<td><code>byStatus</code></td>
+</tr>
+<tr>
+<td><code>jobs</code></td>
+<td><code>byStatus</code>, <code>upcoming</code> (scheduled in the future, not completed/cancelled/failed)</td>
+</tr>
+<tr>
+<td><code>invoices</code></td>
+<td>(cancelled excluded) <code>count</code>, <code>totalInvoiced</code>, <code>totalPaid</code>, <code>outstanding</code>, <code>overdueCount</code>, <code>overdueAmount</code> (PENDING/PARTIALLY_PAID past their due date), <code>byStatus</code> (all statuses)</td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td><code>receivedInPeriod</code>, <code>countInPeriod</code> (SUCCESS by <code>paidAt</code>), <code>byMethod</code> (<code>method</code>, <code>count</code>, <code>amount</code>), <code>failedInPeriod</code>, <code>inProgress</code></td>
+</tr>
+<tr>
+<td><code>revenueByMonth</code></td>
+<td>the last 12 calendar months (<code>month</code> <code>YYYY-MM</code>, <code>amount</code>), months with no payments included as 0</td>
+</tr>
+<tr>
+<td><code>recentPayments</code></td>
+<td>the 10 latest successful payments (<code>paymentId</code>, <code>receiptNumber</code>, <code>invoiceNumber</code>, <code>amount</code>, <code>method</code>, <code>paidAt</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Client</strong> (<code>ksc_client_dashboard</code>). A client is identified by their user ID: their sites are the sites they registered (<code>sites.site_owner_id</code>), and their contracts are those with <code>client_id</code> = the client or on one of their sites. Invoices and payments are those for their sites or contracts.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sites</code></td>
+<td><code>total</code>, <code>list</code> (<code>siteId</code>, <code>addressArea</code>, <code>siteType</code>, <code>service</code>, <code>totalPrice</code>)</td>
+</tr>
+<tr>
+<td><code>contracts</code></td>
+<td><code>byStatus</code>, <code>current</code> (DRAFT/SENT/SIGNED/ACTIVE: number, status, service, dates, value, <code>expiringSoon</code>)</td>
+</tr>
+<tr>
+<td><code>invoices</code></td>
+<td>(cancelled excluded) <code>totalInvoiced</code>, <code>totalPaid</code>, <code>outstanding</code>, <code>overdueCount</code>, <code>overdueAmount</code>, <code>open</code> (PENDING/PARTIALLY_PAID with <code>balanceDue</code>, <code>dueDate</code>, <code>overdue</code>)</td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td><code>totalPaid</code>, <code>inProgress</code>, <code>recent</code> (10 latest, any status, with <code>receiptNumber</code> when paid)</td>
+</tr>
+<tr>
+<td><code>upcomingJobs</code></td>
+<td>next 5 scheduled jobs on their sites (<code>scheduledStart</code>, <code>scheduledEnd</code>, <code>status</code>, <code>serviceType</code>, <code>addressArea</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>A client with no data gets the same structure with zeros and empty lists.</p>
+<p><strong>Staff</strong> (<code>ksc_staff_dashboard</code>). A staff member is identified by their user ID. Jobs are assigned to <strong>crews</strong>, so their jobs are the jobs of crews they belong to (<code>crew_members</code>); attendance comes from their time logs and ratings from <code>staff_ratings</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crews</code></td>
+<td>crews they belong to (<code>crewName</code>, <code>zone</code>, <code>supervisorName</code>, <code>role</code>)</td>
+</tr>
+<tr>
+<td><code>today</code></td>
+<td>today's jobs of their crews (<code>status</code>, <code>serviceType</code>, times, <code>addressArea</code>, <code>crewName</code>)</td>
+</tr>
+<tr>
+<td><code>upcomingJobs</code></td>
+<td>next 10 open jobs from tomorrow on</td>
+</tr>
+<tr>
+<td><code>clockedIn</code></td>
+<td>their open time log (job, <code>clockIn</code>, <code>clockInStatus</code>, <code>addressArea</code>), or <code>null</code></td>
+</tr>
+<tr>
+<td><code>attendanceLast30Days</code></td>
+<td><code>daysWorked</code>, <code>clockIns</code>, <code>jobsWorked</code>, <code>hoursWorked</code>, <code>outOfSiteEvents</code>, <code>missingClockOuts</code> (still clocked in from a previous day)</td>
+</tr>
+<tr>
+<td><code>jobsByStatusLast30Days</code></td>
+<td>their crews' jobs scheduled in the last 30 days, by status</td>
+</tr>
+<tr>
+<td><code>ratings</code></td>
+<td><code>average</code>, <code>count</code>, <code>recent</code> (5 latest with comment)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Supervisor</strong> (<code>ksc_supervisor_dashboard</code>). A supervisor is identified by their user ID; their crews are those with <code>crews.supervisor_id</code> = them. <code>from</code>/<code>to</code> (inclusive) bound the period figures.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crews</code></td>
+<td>their crews with <code>members</code> (<code>staffId</code>, <code>staffName</code>, <code>role</code>)</td>
+</tr>
+<tr>
+<td><code>jobs</code></td>
+<td><code>byStatusInPeriod</code>, <code>todayCount</code>, <code>today</code>, <code>late</code> (end time passed but not completed/cancelled/failed), <code>upcoming</code> (next 10)</td>
+</tr>
+<tr>
+<td><code>attendance</code></td>
+<td><code>onSiteNow</code> (open clock-ins on their jobs, with staff name and site), <code>clockInsInPeriod</code>, <code>hoursInPeriod</code>, <code>outOfSiteEventsInPeriod</code>, <code>missingClockOuts</code></td>
+</tr>
+<tr>
+<td><code>staffPerformance</code></td>
+<td>per crew member (plus anyone else who clocked in on their jobs in the period): <code>jobsWorked</code>, <code>hoursWorked</code>, <code>averageRating</code>, <code>ratingsCount</code></td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td><code>countInPeriod</code>, <code>averageServiceRating</code>, <code>openDisputes</code> (OPEN / UNDER_REVIEW)</td>
+</tr>
+<tr>
+<td><code>checklists</code></td>
+<td>for jobs scheduled in the period: <code>itemsInPeriod</code>, <code>completedItems</code>, <code>completionRate</code> (%)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Staff or supervisors with no data get the same structure with zeros, <code>null</code> averages and empty lists.</p>
+<h2 id="10-enumerations">10. Enumerations</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Status</code></td>
+<td>ACTIVE, INACTIVE</td>
+</tr>
+<tr>
+<td><code>Currency</code></td>
+<td>TZS, USD</td>
+</tr>
+<tr>
+<td><code>LeadServiceType</code></td>
+<td>DEEP_CLEANING, OFFICE_CLEANING, RESIDENTIAL_CLEANING, COMMERCIAL_CLEANING, OTHER, CLEANING, FUMIGATION, PEST_CONTROL, PROPERTY_MANAGEMENT</td>
+</tr>
+<tr>
+<td><code>LeadSource</code></td>
+<td>WEBSITE, REFERRAL, SOCIAL_MEDIA, WALK_IN, OTHER</td>
+</tr>
+<tr>
+<td><code>LeadStatus</code></td>
+<td>NEW, CONTACTED, CONVERTED, LOST</td>
+</tr>
+<tr>
+<td><code>QuoteStatus</code></td>
+<td>DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED</td>
+</tr>
+<tr>
+<td><code>Frequency</code></td>
+<td>ONCE, DAILY, WEEKLY, BI_WEEKLY, MONTHLY, QUARTERLY, YEARLY</td>
+</tr>
+<tr>
+<td><code>ContractStatus</code></td>
+<td>DRAFT, SENT, SIGNED, ACTIVE, EXPIRED, TERMINATED, REJECTED</td>
+</tr>
+<tr>
+<td><code>SignatureStatus</code></td>
+<td>PENDING, SIGNED, REJECTED</td>
+</tr>
+<tr>
+<td><code>SubscriptionStatus</code></td>
+<td>ACTIVE, PAUSED, CANCELLED, EXPIRED, RESUMED, RENEWED, PENDING, FAILED</td>
+</tr>
+<tr>
+<td><code>JobType</code></td>
+<td>SERVICE_JOB, ONE_TIME</td>
+</tr>
+<tr>
+<td><code>JobStatus</code></td>
+<td>SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED, ASSIGNED, FAILED</td>
+</tr>
+<tr>
+<td><code>TimeLogStatus</code></td>
+<td>IN_SITE, OUT_OF_SITE</td>
+</tr>
+<tr>
+<td><code>DisputeStatus</code></td>
+<td>NONE, OPEN, UNDER_REVIEW, RESOLVED, REJECTED</td>
+</tr>
+<tr>
+<td><code>PaymentMethod</code></td>
+<td>CASH, BANK, MOBILE_MONEY, CARD, CHECKOUT, BILLPAY, PAYPAL, STRIPE, OTHER</td>
+</tr>
+<tr>
+<td><code>PaymentStatus</code></td>
+<td>CREATED, PENDING, PROCESSING, SUCCESS, FAILED, CANCELLED, REFUND_PENDING, REFUNDED</td>
+</tr>
+<tr>
+<td><code>DocumentType</code></td>
+<td>CONTRACT</td>
+</tr>
+<tr>
+<td><code>WorkFlowStatus</code></td>
+<td>PENDING, APPROVED, RETURNED</td>
+</tr>
+<tr>
+<td><code>MailEncryption</code></td>
+<td>NONE, SSL, TLS</td>
+</tr>
+<tr>
+<td><code>UserRoles</code></td>
+<td>CUSTOMER, DRIVER</td>
+</tr>
+</tbody>
+</table></div>
+<p>Enums with display names (e.g. <code>JobStatus.IN_PROGRESS</code> → "In Progress") expose them via <code>getDisplayName()</code>. API requests and the database use the constant name.</p>
+<hr />
+<h2 id="11-security-and-permissions">11. Security and permissions</h2>
+<ul>
+<li>Authentication and authorization are provided by the internal <strong><code>afriSecurity</code></strong> library.</li>
+<li><code>AuthDetailsExtractor.getUserId(authentication)</code> resolves the current user's UUID; it is stored as <code>created_by</code> / <code>updated_by</code>.</li>
+<li>Each endpoint declares <code>@Permission(name = "...", code = "...")</code>. The permission codes in <a href="#8-api-reference">API reference</a> must be granted to a user's role for the call to succeed. Permission and audit-log tables come from <code>afriSecurity</code> (<code>afriSecurity.permissions.repository</code>, <code>afriSecurity.auditLogs.repositories</code>).</li>
+<li>Dashboards identify the caller by their user ID: a <strong>client</strong> by the sites they registered, a <strong>staff</strong> member by their crew memberships, a <strong>supervisor</strong> by <code>crews.supervisor_id</code>.</li>
+</ul>
+<h3 id="permissions-reference">Permissions reference</h3>
+<p>Every permission code used by the API, generated from the controllers. Grant codes to roles in <code>afriSecurity</code>; a call without the endpoint's code is refused. File-upload endpoints declare no permission.</p>
+<h4 id="master-data-24-codes">Master data (24 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CHANGE_ADD_ON_STATUS</code></td>
+<td><code>PATCH /add-ons/{id}/status</code></td>
+</tr>
+<tr>
+<td><code>CHANGE_CLEANING_DEPTH_STATUS</code></td>
+<td><code>PATCH /cleaning-depths/{id}/status</code></td>
+</tr>
+<tr>
+<td><code>CHANGE_SERVICE_STATUS</code></td>
+<td><code>PATCH /services/{serviceId}/status</code></td>
+</tr>
+<tr>
+<td><code>CHANGE_SLOT_STATUS</code></td>
+<td><code>PATCH /slots/{id}/status</code></td>
+</tr>
+<tr>
+<td><code>DELETE_ADD_ON</code></td>
+<td><code>DELETE /add-ons/{id}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_CLEANING_DEPTH</code></td>
+<td><code>DELETE /cleaning-depths/{id}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_SERVICE</code></td>
+<td><code>DELETE /services/{id}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_SLOT</code></td>
+<td><code>DELETE /slots/{id}</code></td>
+</tr>
+<tr>
+<td><code>SAVE_ADD_ON</code></td>
+<td><code>POST /add-ons</code></td>
+</tr>
+<tr>
+<td><code>SAVE_CLEANING_DEPTH</code></td>
+<td><code>POST /cleaning-depths</code></td>
+</tr>
+<tr>
+<td><code>SAVE_SERVICE</code></td>
+<td><code>POST /services</code></td>
+</tr>
+<tr>
+<td><code>SAVE_SLOT</code></td>
+<td><code>POST /slots</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_ADD_ON</code></td>
+<td><code>PUT /add-ons/{id}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_CLEANING_DEPTH</code></td>
+<td><code>PUT /cleaning-depths/{id}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_SERVICE</code></td>
+<td><code>PUT /service/{id}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_SLOT</code></td>
+<td><code>PUT /slots/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ADD_ON</code></td>
+<td><code>GET /add-ons</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ADD_ON_BY_ID</code></td>
+<td><code>GET /add-ons/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CLEANING_DEPTH</code></td>
+<td><code>GET /cleaning-depths</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CLEANING_DEPTH_BY_ID</code></td>
+<td><code>GET /cleaning-depths/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SERVICE</code></td>
+<td><code>GET /services</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SERVICE_BY_ID</code></td>
+<td><code>GET /services/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SLOT</code></td>
+<td><code>GET /slots</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SLOT_BY_ID</code></td>
+<td><code>GET /slots/{id}</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sites-5-codes">Sites (5 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DELETE_SITE</code></td>
+<td><code>DELETE /sites/{id}</code></td>
+</tr>
+<tr>
+<td><code>SAVE_SITE</code></td>
+<td><code>POST /sites</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_SITE</code></td>
+<td><code>PUT /sites/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SITE</code></td>
+<td><code>GET /sites</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SITE_BY_ID</code></td>
+<td><code>GET /sites/{id}</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="leads-5-codes">Leads (5 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CHANGE_LEAD_STATUS</code></td>
+<td><code>PUT /leads/{leadId}/status</code></td>
+</tr>
+<tr>
+<td><code>DELETE_LEAD</code></td>
+<td><code>DELETE /leads/{id}</code></td>
+</tr>
+<tr>
+<td><code>SAVE_LEAD</code></td>
+<td><code>POST /leads</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_LEAD</code></td>
+<td><code>PUT /leads/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_LEAD</code></td>
+<td><code>GET /leads</code>, <code>GET /leads/pagination</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="quotations-8-codes">Quotations (8 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACCEPT_QUOTE</code></td>
+<td><code>POST /quotes/{id}/accept</code></td>
+</tr>
+<tr>
+<td><code>DELETE_QUOTE</code></td>
+<td><code>DELETE /quotes/{id}</code></td>
+</tr>
+<tr>
+<td><code>DOWNLOAD_QUOTE_PDF</code></td>
+<td><code>GET /quotes/{id}/pdf</code></td>
+</tr>
+<tr>
+<td><code>SAVE_QUOTE</code></td>
+<td><code>POST /quotes</code></td>
+</tr>
+<tr>
+<td><code>SEND_QUOTE</code></td>
+<td><code>POST /quotes/{id}/send</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_QUOTE</code></td>
+<td><code>PUT /quotes/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_QUOTE</code></td>
+<td><code>GET /quotes</code></td>
+</tr>
+<tr>
+<td><code>VIEW_QUOTE_BY_ID</code></td>
+<td><code>GET /quotes/{id}</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="invoices-and-payments-10-codes">Invoices and payments (10 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DOWNLOAD_INVOICE_PDF</code></td>
+<td><code>GET /invoices/{id}/pdf</code></td>
+</tr>
+<tr>
+<td><code>DOWNLOAD_PAYMENT_RECEIPT</code></td>
+<td><code>GET /payments/{id}/receipt</code></td>
+</tr>
+<tr>
+<td><code>PAY_INVOICE</code></td>
+<td><code>POST /invoices/{invoiceId}/payments</code></td>
+</tr>
+<tr>
+<td><code>RECORD_CASH_PAYMENT</code></td>
+<td><code>POST /invoices/{invoiceId}/payments/cash</code></td>
+</tr>
+<tr>
+<td><code>VIEW_INVOICE</code></td>
+<td><code>GET /invoices</code></td>
+</tr>
+<tr>
+<td><code>VIEW_INVOICE_BY_ID</code></td>
+<td><code>GET /invoices/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_INVOICE_PAYMENTS</code></td>
+<td><code>GET /invoices/{invoiceId}/payments</code></td>
+</tr>
+<tr>
+<td><code>VIEW_PAYMENT</code></td>
+<td><code>GET /payments</code></td>
+</tr>
+<tr>
+<td><code>VIEW_PAYMENT_BY_ID</code></td>
+<td><code>GET /payments/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SITE_INVOICES</code></td>
+<td><code>GET /sites/{siteId}/invoices</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="contracts-and-subscriptions-23-codes">Contracts and subscriptions (23 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>APPROVE_CONTRACT</code></td>
+<td><code>POST /contracts/{id}/approve</code></td>
+</tr>
+<tr>
+<td><code>CANCEL_SUBSCRIPTION</code></td>
+<td><code>POST /subscriptions/{subscriptionId}/cancel</code></td>
+</tr>
+<tr>
+<td><code>DELETE_CONTRACT</code></td>
+<td><code>DELETE /contracts/{id}</code></td>
+</tr>
+<tr>
+<td><code>DOWNLOAD_CONTRACT_PDF</code></td>
+<td><code>GET /contracts/{id}/pdf</code></td>
+</tr>
+<tr>
+<td><code>PAUSE_SUBSCRIPTION</code></td>
+<td><code>POST /subscriptions/{subscriptionId}/pause</code></td>
+</tr>
+<tr>
+<td><code>REJECT_CONTRACT</code></td>
+<td><code>POST /contracts/{id}/reject</code></td>
+</tr>
+<tr>
+<td><code>RENEW_SUBSCRIPTION</code></td>
+<td><code>POST /subscriptions/{subscriptionId}/renew</code></td>
+</tr>
+<tr>
+<td><code>RESUME_SUBSCRIPTION</code></td>
+<td><code>POST /subscriptions/{subscriptionId}/resume</code></td>
+</tr>
+<tr>
+<td><code>SAVE_CONTRACT</code></td>
+<td><code>POST /contracts</code></td>
+</tr>
+<tr>
+<td><code>SAVE_SUBSCRIPTION</code></td>
+<td><code>POST /subscriptions</code></td>
+</tr>
+<tr>
+<td><code>SEND_CONTRACT</code></td>
+<td><code>POST /contracts/{id}/send</code></td>
+</tr>
+<tr>
+<td><code>TERMINATE_CONTRACT</code></td>
+<td><code>POST /contracts/{id}/terminate</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_CONTRACT</code></td>
+<td><code>PUT /contracts/{id}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_SUBSCRIPTION</code></td>
+<td><code>PUT /subscriptions/{subscriptionId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACT</code></td>
+<td><code>GET /contracts</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACTS</code></td>
+<td><code>GET /contracts/pagination</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACT_BY_ID</code></td>
+<td><code>GET /contracts/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACT_INVOICES</code></td>
+<td><code>GET /contracts/{id}/invoices</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACT_PAYMENTS</code></td>
+<td><code>GET /contracts/{id}/payments</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CONTRACT_SUBSCRIPTIONS</code></td>
+<td><code>GET /contracts/{id}/subscriptions</code></td>
+</tr>
+<tr>
+<td><code>VIEW_EXPIRING_CONTRACTS</code></td>
+<td><code>GET /contracts/expiring</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SUBSCRIPTIONS</code></td>
+<td><code>GET /subscriptions</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SUBSCRIPTION_BY_ID</code></td>
+<td><code>GET /subscriptions/{subscriptionId}</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="jobs-crews-and-field-work-38-codes">Jobs, crews and field work (38 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ADD_CREW_MEMBER</code></td>
+<td><code>POST /crews/{crewId}/members</code></td>
+</tr>
+<tr>
+<td><code>ADD_FEEDBACK</code></td>
+<td><code>POST /feedbacks</code></td>
+</tr>
+<tr>
+<td><code>ADD_STAFF_RATING</code></td>
+<td><code>POST /staff-ratings</code></td>
+</tr>
+<tr>
+<td><code>ASSIGN_SUPERVISOR_TO_CREW</code></td>
+<td><code>POST /crews/{crewId}/supervisor/{supervisorId}</code></td>
+</tr>
+<tr>
+<td><code>CLOCK_IN</code></td>
+<td><code>POST /jobs/{jobId}/clock-in</code></td>
+</tr>
+<tr>
+<td><code>CLOCK_OUT</code></td>
+<td><code>POST /jobs/{jobId}/clock-out</code></td>
+</tr>
+<tr>
+<td><code>CREATE_CHECKLIST</code></td>
+<td><code>POST /jobs/{jobId}/checklists</code></td>
+</tr>
+<tr>
+<td><code>CREATE_CREW</code></td>
+<td><code>POST /crews</code></td>
+</tr>
+<tr>
+<td><code>CREATE_JOB</code></td>
+<td><code>POST /jobs</code></td>
+</tr>
+<tr>
+<td><code>DELETE_CHECKLIST_ITEM_BY_ID</code></td>
+<td><code>DELETE /checklist-items/{checklistItemId}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_CREW_BY_ID</code></td>
+<td><code>DELETE /crews/{crewId}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_FEEDBACK</code></td>
+<td><code>DELETE /feedbacks/{feedbackId}</code></td>
+</tr>
+<tr>
+<td><code>DELETE_STAFF_RATING</code></td>
+<td><code>DELETE /staff-ratings/{id}</code></td>
+</tr>
+<tr>
+<td><code>REMOVE_CREW_MEMBER</code></td>
+<td><code>DELETE /crews/{crewId}/members/{staffId}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_CHECKLIST_ITEM_BY_ID</code></td>
+<td><code>PUT /checklist-items/{checklistItemId}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_CREW_BY_ID</code></td>
+<td><code>PUT /crews/{crewId}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_FEEDBACK</code></td>
+<td><code>PUT /feedbacks/{feedbackId}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_JOB_BY_ID</code></td>
+<td><code>PUT /jobs/{jobId}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_STAFF_RATING</code></td>
+<td><code>PUT /staff-ratings/{id}</code></td>
+</tr>
+<tr>
+<td><code>UPDATE_TIME_LOG</code></td>
+<td><code>PUT /time-logs/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ALL_CREWS</code></td>
+<td><code>GET /crews</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ALL_FEEDBACK</code></td>
+<td><code>GET /feedbacks</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ALL_JOBS</code></td>
+<td><code>GET /jobs</code></td>
+</tr>
+<tr>
+<td><code>VIEW_ALL_STAFF_RATINGS</code></td>
+<td><code>GET /staff-ratings</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CHECKLIST_ITEM_BY_ID</code></td>
+<td><code>GET /checklist-items/{checklistItemId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CREW_BY_ID</code></td>
+<td><code>GET /crews/{crewId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CREW_MEMBERS</code></td>
+<td><code>GET /crews/{crewId}/members</code>, <code>GET /staff/{staffId}/crews</code></td>
+</tr>
+<tr>
+<td><code>VIEW_FEEDBACK_BY_ID</code></td>
+<td><code>GET /feedbacks/{feedbackId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_FEEDBACK_BY_JOB_ID</code></td>
+<td><code>GET /jobs/{jobId}/feedbacks</code></td>
+</tr>
+<tr>
+<td><code>VIEW_JOB_BY_ID</code></td>
+<td><code>GET /jobs/{jobId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_JOB_STAFF_RATINGS</code></td>
+<td><code>GET /jobs/{jobId}/staff-ratings</code></td>
+</tr>
+<tr>
+<td><code>VIEW_JOB_STAFF_RATING_SUMMARY</code></td>
+<td><code>GET /jobs/{jobId}/staff-ratings/summary</code></td>
+</tr>
+<tr>
+<td><code>VIEW_STAFF_ATTENDANCE</code></td>
+<td><code>GET /staff/{staffId}/attendance</code></td>
+</tr>
+<tr>
+<td><code>VIEW_STAFF_RATINGS</code></td>
+<td><code>GET /staff/{staffId}/ratings</code></td>
+</tr>
+<tr>
+<td><code>VIEW_STAFF_RATING_BY_ID</code></td>
+<td><code>GET /staff-ratings/{id}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_STAFF_RATING_SUMMARY</code></td>
+<td><code>GET /staff/{staffId}/rating-summary</code></td>
+</tr>
+<tr>
+<td><code>VIEW_TIME_LOGS</code></td>
+<td><code>GET /jobs/{jobId}/time-logs</code></td>
+</tr>
+<tr>
+<td><code>VIEW_TIME_LOG_BY_ID</code></td>
+<td><code>GET /time-logs/{id}</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="dashboards-4-codes">Dashboards (4 codes)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VIEW_ADMIN_DASHBOARD</code></td>
+<td><code>GET /dashboard/admin</code>, <code>GET /dashboard/clients/{clientId}</code>, <code>GET /dashboard/staff/{staffId}</code>, <code>GET /dashboard/supervisors/{supervisorId}</code></td>
+</tr>
+<tr>
+<td><code>VIEW_CLIENT_DASHBOARD</code></td>
+<td><code>GET /dashboard/client</code></td>
+</tr>
+<tr>
+<td><code>VIEW_STAFF_DASHBOARD</code></td>
+<td><code>GET /dashboard/staff</code></td>
+</tr>
+<tr>
+<td><code>VIEW_SUPERVISOR_DASHBOARD</code></td>
+<td><code>GET /dashboard/supervisor</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="suggested-grants-for-dashboard-users">Suggested grants for dashboard users</h3>
+<p>A starting point for the four dashboard personas; adjust to your organisation.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Dashboard</th>
+<th>Typical additional codes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super admin</td>
+<td><code>VIEW_ADMIN_DASHBOARD</code> (also opens any client, staff or supervisor dashboard)</td>
+<td>all codes</td>
+</tr>
+<tr>
+<td>Supervisor</td>
+<td><code>VIEW_SUPERVISOR_DASHBOARD</code></td>
+<td><code>VIEW_CREW_MEMBERS</code>, <code>ADD_CREW_MEMBER</code>, <code>REMOVE_CREW_MEMBER</code>, <code>VIEW_ALL_JOBS</code>, <code>VIEW_JOB_BY_ID</code>, <code>UPDATE_JOB_BY_ID</code>, <code>VIEW_TIME_LOGS</code>, <code>VIEW_STAFF_RATINGS</code>, <code>VIEW_STAFF_RATING_SUMMARY</code></td>
+</tr>
+<tr>
+<td>Staff</td>
+<td><code>VIEW_STAFF_DASHBOARD</code></td>
+<td><code>CLOCK_IN</code>, <code>CLOCK_OUT</code>, <code>VIEW_JOB_BY_ID</code></td>
+</tr>
+<tr>
+<td>Client</td>
+<td><code>VIEW_CLIENT_DASHBOARD</code></td>
+<td><code>SAVE_SITE</code>, <code>VIEW_SITE_BY_ID</code>, <code>DOWNLOAD_QUOTE_PDF</code>, <code>DOWNLOAD_INVOICE_PDF</code>, <code>PAY_INVOICE</code>, <code>VIEW_PAYMENT_BY_ID</code>, <code>DOWNLOAD_PAYMENT_RECEIPT</code>, <code>DOWNLOAD_CONTRACT_PDF</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Note: endpoints such as <code>GET /sites/{id}</code> or <code>GET /invoices/{id}</code> check the permission code only, not whether the record belongs to the caller. Only the dashboards scope data to the signed-in user, so grant record-level codes to clients with that in mind.</p>
+<hr />
+<h2 id="12-seed-data">12. Seed data</h2>
+<p>Seeders in <code>masterData/seeders</code> run at application startup (<code>CommandLineRunner</code>). Each record is inserted <strong>only if no record with the same name exists</strong> (case-insensitive), so restarts are safe. Editing a value in a seeder does <strong>not</strong> update a row that already exists; use the API instead.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Seeder</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ServiceSeeder</code></td>
+<td>Cleaning (no fixed price), Fumigation (150,000), Property Management (200,000). If a service already exists <strong>without</strong> a price, the seed price is filled in once; a price set through the API is never overwritten</td>
+</tr>
+<tr>
+<td><code>CleaningDepthSeeder</code></td>
+<td>Shallow (50,000), Medium (80,000), Deep (120,000)</td>
+</tr>
+<tr>
+<td><code>AddOnSeeder</code></td>
+<td>Window Cleaning (20,000), Carpet Cleaning (35,000), Sofa Cleaning (30,000), Fridge Cleaning (15,000), Oven Cleaning (15,000)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Prices are in TZS. The cleaning-depth and add-on prices and the add-on list are <strong>placeholders</strong> to be replaced with real business values.</p>
+<hr />
+<h2 id="13-configuration">13. Configuration</h2>
+<p><code>src/main/resources/application.properties</code> holds bootstrap settings. Everything else (datasource, file paths, etc.) is expected from the <strong>Spring Cloud Config Server</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default / source</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spring.application.name</code></td>
+<td><code>ksc</code></td>
+<td>Service name (Eureka, config server)</td>
+</tr>
+<tr>
+<td><code>spring.config.import</code></td>
+<td><code>optional:configserver:${CONFIG_SERVER_URI:http://localhost:7000/}</code></td>
+<td>Config server location</td>
+</tr>
+<tr>
+<td><code>spring.profiles.active</code></td>
+<td><code>${PROFILE:default}</code></td>
+<td>Active profile</td>
+</tr>
+<tr>
+<td><code>spring.redis.host</code> / <code>port</code> / <code>password</code></td>
+<td>application.properties</td>
+<td>Redis connection</td>
+</tr>
+<tr>
+<td><code>spring.kafka.bootstrap-servers</code></td>
+<td>application.properties</td>
+<td>Kafka brokers</td>
+</tr>
+<tr>
+<td><code>spring.datasource.*</code></td>
+<td>config server</td>
+<td>PostgreSQL connection</td>
+</tr>
+<tr>
+<td><code>file.upload-dir</code></td>
+<td>config server</td>
+<td>Root folder for uploaded files</td>
+</tr>
+<tr>
+<td><code>file.upload.paths.&lt;DOCUMENT_TYPE&gt;</code></td>
+<td>config server</td>
+<td>Sub-folder per document type</td>
+</tr>
+<tr>
+<td><code>ksc.company.name</code></td>
+<td><code>KSC Limited</code></td>
+<td>Company name on quotation/invoice PDFs</td>
+</tr>
+<tr>
+<td><code>ksc.company.tagline</code></td>
+<td><code>Cleaning, Fumigation &amp; Property Management</code></td>
+<td>Tagline under the company name</td>
+</tr>
+<tr>
+<td><code>ksc.company.address</code></td>
+<td><code>Dar es Salaam, Tanzania</code></td>
+<td>Address on PDFs</td>
+</tr>
+<tr>
+<td><code>ksc.company.email</code></td>
+<td><code>ksc@gmail.com</code></td>
+<td>Contact email on PDFs</td>
+</tr>
+<tr>
+<td><code>ksc.company.phone</code></td>
+<td>empty (hidden)</td>
+<td>Contact phone on PDFs</td>
+</tr>
+<tr>
+<td><code>ksc.payment.provider</code></td>
+<td><code>CLICKPESA</code></td>
+<td>Provider used for payments (<code>CLICKPESA</code> or <code>SELCOM</code>; Selcom needs the payer's email and whole TZS amounts)</td>
+</tr>
+<tr>
+<td><code>ksc.payment.system</code></td>
+<td><code>KSC</code></td>
+<td>KSC's system code at the payment service</td>
+</tr>
+<tr>
+<td><code>ksc.payment.result-timeout-minutes</code></td>
+<td><code>120</code></td>
+<td>Minutes without a result before an in-progress <strong>mobile money</strong> payment is marked FAILED</td>
+</tr>
+<tr>
+<td><code>ksc.payment.hosted-result-timeout-minutes</code></td>
+<td><code>780</code></td>
+<td>Same, for CARD / CHECKOUT / BILLPAY / BANK payments (the client pays later via a link or control number)</td>
+</tr>
+<tr>
+<td><code>ksc.payment.timeout-check-interval-ms</code></td>
+<td><code>600000</code> (10 min)</td>
+<td>How often the timeout sweep runs</td>
+</tr>
+<tr>
+<td><code>ksc.payment.timeout-check-initial-delay-ms</code></td>
+<td><code>120000</code> (2 min)</td>
+<td>Delay before the first sweep after startup</td>
+</tr>
+<tr>
+<td><code>ksc.contract.lifecycle-cron</code></td>
+<td><code>0 15 0 * * *</code> (00:15 daily)</td>
+<td>When the contract lifecycle job runs</td>
+</tr>
+<tr>
+<td><code>ksc.contract.lifecycle-initial-delay-ms</code></td>
+<td><code>60000</code> (1 min)</td>
+<td>Delay before the one-off lifecycle run after startup</td>
+</tr>
+<tr>
+<td><code>ksc.dashboard.install-functions</code></td>
+<td><code>true</code></td>
+<td>Install/refresh the dashboard database functions at startup</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="environment-variables">Environment variables</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CONFIG_SERVER_URI</code></td>
+<td><code>http://localhost:7000/</code></td>
+<td>Config server URL</td>
+</tr>
+<tr>
+<td><code>PROFILE</code></td>
+<td><code>default</code></td>
+<td>Spring profile</td>
+</tr>
+<tr>
+<td><code>JAVA_OPTS</code></td>
+<td>empty</td>
+<td>JVM options (Docker)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="14-building-and-running">14. Building and running</h2>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li><strong>JDK 17 or 21.</strong> The project currently uses <strong>Lombok 1.18.34, which does not work on JDK 25+</strong> (the build fails with hundreds of "cannot find symbol" errors for getters/setters). Either build with JDK 17/21 or upgrade Lombok to 1.18.40 or later.</li>
+<li>Maven (wrapper <code>./mvnw</code> included)</li>
+<li>Access to the <code>afriSecurity</code> and <code>afriUtils</code> artifacts (internal Maven repository)</li>
+<li>Running PostgreSQL, Redis, Kafka, Config Server and Eureka</li>
+</ul>
+<h3 id="build">Build</h3>
+<div class="code-wrap"><pre><code class="language-bash">export JAVA_HOME=&lt;path to JDK 17 or 21&gt;
+./mvnw clean package
+</code></pre></div>
+<h3 id="run-the-tests">Run the tests</h3>
+<div class="code-wrap"><pre><code class="language-bash">export JAVA_HOME=&lt;path to JDK 17 or 21&gt;
+./mvnw test -Dtest='PricingItemResolverTest,ContractServiceImplTest,PaymentServiceImplTest,PaymentResultListenerTest,PaymentResultTimeoutJobTest,DashboardServiceTest'
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Test class</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PricingItemResolverTest</code></td>
+<td>Cleaning-depth rules per service, service fixed price, line items and totals</td>
+</tr>
+<tr>
+<td><code>ContractServiceImplTest</code></td>
+<td>Create from accepted quote, lifecycle transitions, daily activate/expire, validation</td>
+</tr>
+<tr>
+<td><code>PaymentServiceImplTest</code></td>
+<td>Starting payments via the payment service, Kafka results, late SUCCESS with balance cap, cash</td>
+</tr>
+<tr>
+<td><code>PaymentResultListenerTest</code></td>
+<td>Parsing payment-service events, skipping other systems and bad messages</td>
+</tr>
+<tr>
+<td><code>PaymentResultTimeoutJobTest</code></td>
+<td>Failing payments with no result after the timeout (per method)</td>
+</tr>
+<tr>
+<td><code>DashboardServiceTest</code></td>
+<td>All four dashboards: parameters, period defaults and limits, exact amounts, missing-function error</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are plain unit tests (Mockito) and need no database, Kafka or config server. <code>KscApplicationTests.contextLoads</code> starts the whole application, so a plain <code>./mvnw test</code> fails unless the config server and database are reachable.</p>
+<h3 id="run-locally">Run locally</h3>
+<div class="code-wrap"><pre><code class="language-bash">CONFIG_SERVER_URI=http://localhost:7000/ PROFILE=default ./mvnw spring-boot:run
+</code></pre></div>
+<h3 id="docker">Docker</h3>
+<p>The <code>Dockerfile</code> uses <code>eclipse-temurin:17-jdk</code> and runs the packaged jar:</p>
+<div class="code-wrap"><pre><code class="language-bash">./mvnw clean package
+docker build -t ksc .
+docker run -e CONFIG_SERVER_URI=http://config:7000/ -e PROFILE=prod ksc
+</code></pre></div>
+<h3 id="health-and-metrics">Health and metrics</h3>
+<p>Spring Boot Actuator is enabled. Prometheus metrics are exposed through Micrometer, and traces are sent via Zipkin (Brave) when configured.</p>
+<hr />
+<h2 id="15-database-setup">15. Database setup</h2>
+<p><code>spring.jpa.hibernate.ddl-auto</code> is not set in this repository, and there is no Flyway/Liquibase. The schema is managed outside the codebase, or by Hibernate through the config-server properties (<code>afri-config-repo</code>).</p>
+<h3 id="relaxed-not-null-constraints-run-by-hand">Relaxed NOT NULL constraints (run by hand)</h3>
+<p>If the database is maintained by <code>ddl-auto=update</code>, Hibernate <strong>adds</strong> new tables and columns automatically but <strong>never removes or relaxes</strong> a constraint that already exists. Columns that used to be required and are now optional keep their <code>NOT NULL</code>, and inserts fail with an error such as:</p>
+<div class="code-wrap"><pre><code>Data integrity violation: ERROR: null value in column &quot;contract_id&quot; of relation &quot;invoices&quot; violates not-null constraint
+</code></pre></div>
+<p>Run these once against the KSC database (they change no data, only allow empty values):</p>
+<div class="code-wrap"><pre><code class="language-sql">-- Invoices are created from quotes; the contract is attached later
+ALTER TABLE invoices ALTER COLUMN contract_id DROP NOT NULL;
+
+-- Fumigation / Property Management sites may have no cleaning depth
+ALTER TABLE sites ALTER COLUMN cleaning_depth_id DROP NOT NULL;
+
+-- Contracts: the PDF is generated on request, so pdf_url is optional
+ALTER TABLE contracts ALTER COLUMN pdf_url DROP NOT NULL;
+
+-- Contracts: one live contract per quote is enforced in code, so a deleted DRAFT
+-- contract's quote can get a new one. Drop the old unique key on quote_id, if any.
+DO $$
+DECLARE c record;
+BEGIN
+  FOR c IN SELECT con.conname
+           FROM pg_constraint con
+           JOIN pg_attribute att ON att.attrelid = con.conrelid AND att.attnum = ANY (con.conkey)
+           WHERE con.conrelid = 'contracts'::regclass AND con.contype = 'u'
+             AND att.attname = 'quote_id' AND array_length(con.conkey, 1) = 1
+  LOOP
+    EXECUTE format('ALTER TABLE contracts DROP CONSTRAINT %I', c.conname);
+  END LOOP;
+END $$;
+
+-- Slots no longer belong to a site (only if that column was ever created)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name = 'slots' AND column_name = 'site_id') THEN
+    ALTER TABLE slots ALTER COLUMN site_id DROP NOT NULL;
+  END IF;
+END $$;
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Symptom if not relaxed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoices.contract_id</code></td>
+<td>Creating a site fails (its invoice has no contract yet)</td>
+</tr>
+<tr>
+<td><code>sites.cleaning_depth_id</code></td>
+<td>Creating a Fumigation / Property Management site without a cleaning depth fails</td>
+</tr>
+<tr>
+<td><code>slots.site_id</code></td>
+<td>Creating a slot fails (slots no longer link to a site)</td>
+</tr>
+<tr>
+<td><code>contracts.pdf_url</code></td>
+<td>Creating a contract fails (no PDF URL is supplied any more)</td>
+</tr>
+<tr>
+<td>unique key on <code>contracts.quote_id</code></td>
+<td>Re-creating a contract for a quote whose DRAFT contract was deleted fails</td>
+</tr>
+</tbody>
+</table></div>
+<p>When a future change makes a required column optional, add its <code>DROP NOT NULL</code> here.</p>
+<h3 id="full-schema-for-these-features">Full schema for these features</h3>
+<p>When the schema is managed by hand, ensure these objects exist:</p>
+<div class="code-wrap"><pre><code class="language-sql">CREATE TABLE services (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    service_name varchar(255) NOT NULL,
+    status varchar(50) NOT NULL,
+    created_by uuid, created_at timestamp, updated_by uuid, updated_at timestamp,
+    deleted_at timestamp, deleted boolean DEFAULT false, active boolean DEFAULT true
+);
+
+CREATE TABLE slots (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    start_date_time timestamp NOT NULL,
+    end_date_time timestamp NOT NULL,
+    status varchar(50) NOT NULL,
+    created_by uuid, created_at timestamp, updated_by uuid, updated_at timestamp,
+    deleted_at timestamp, deleted boolean DEFAULT false, active boolean DEFAULT true
+);
+
+CREATE TABLE cleaning_depths (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name varchar(255) NOT NULL,
+    price numeric(15,2) NOT NULL,
+    description varchar(255),
+    status varchar(50) NOT NULL,
+    created_by uuid, created_at timestamp, updated_by uuid, updated_at timestamp,
+    deleted_at timestamp, deleted boolean DEFAULT false, active boolean DEFAULT true
+);
+
+CREATE TABLE add_ons (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name varchar(255) NOT NULL,
+    price numeric(15,2) NOT NULL,
+    description varchar(255),
+    status varchar(50) NOT NULL,
+    created_by uuid, created_at timestamp, updated_by uuid, updated_at timestamp,
+    deleted_at timestamp, deleted boolean DEFAULT false, active boolean DEFAULT true
+);
+
+-- Site pricing
+ALTER TABLE services ADD COLUMN price numeric(15,2);
+ALTER TABLE sites ADD COLUMN service_id uuid REFERENCES services(id);
+ALTER TABLE sites ADD COLUMN cleaning_depth_id uuid REFERENCES cleaning_depths(id);
+ALTER TABLE sites ADD COLUMN total_price numeric(15,2);
+-- Back-fill existing rows, then:
+-- ALTER TABLE sites ALTER COLUMN service_id SET NOT NULL;
+-- (cleaning_depth_id stays nullable: Fumigation / Property Management sites may have none)
+-- ALTER TABLE sites ALTER COLUMN total_price SET NOT NULL;
+
+CREATE TABLE site_add_ons (
+    site_id uuid NOT NULL REFERENCES sites(id),
+    add_on_id uuid NOT NULL REFERENCES add_ons(id),
+    PRIMARY KEY (site_id, add_on_id)
+);
+
+-- Contract lifecycle (new columns; added automatically under ddl-auto=update)
+ALTER TABLE contracts ADD COLUMN contract_number varchar(32) UNIQUE;
+ALTER TABLE contracts ADD COLUMN site_id uuid REFERENCES sites(id);
+ALTER TABLE contracts ADD COLUMN status varchar(20);
+ALTER TABLE contracts ADD COLUMN terms varchar(4000);
+ALTER TABLE contracts ADD COLUMN sent_at timestamp;
+ALTER TABLE contracts ADD COLUMN signed_at timestamp;
+ALTER TABLE contracts ADD COLUMN signed_by varchar(255);
+ALTER TABLE contracts ADD COLUMN rejected_at timestamp;
+ALTER TABLE contracts ADD COLUMN rejection_reason varchar(255);
+ALTER TABLE contracts ADD COLUMN terminated_at timestamp;
+ALTER TABLE contracts ADD COLUMN termination_reason varchar(255);
+-- Existing contracts (if any) predate statuses: mark them DRAFT so they can be reviewed
+UPDATE contracts SET status = 'DRAFT' WHERE status IS NULL;
+
+-- Quotation and invoice generation
+ALTER TABLE quotes ADD COLUMN quote_number varchar(32) UNIQUE;
+
+CREATE TABLE quote_items (
+    quote_id uuid NOT NULL REFERENCES quotes(id),
+    line_no integer NOT NULL,
+    description varchar(255) NOT NULL,
+    quantity integer NOT NULL,
+    unit_price numeric(15,2) NOT NULL,
+    amount numeric(15,2) NOT NULL,
+    PRIMARY KEY (quote_id, line_no)
+);
+
+ALTER TABLE invoices ALTER COLUMN contract_id DROP NOT NULL;
+ALTER TABLE invoices ADD COLUMN invoice_number varchar(32) UNIQUE;
+ALTER TABLE invoices ADD COLUMN quote_id uuid REFERENCES quotes(id);
+ALTER TABLE invoices ADD COLUMN site_id uuid REFERENCES sites(id);
+ALTER TABLE invoices ADD COLUMN issue_date date;
+ALTER TABLE invoices ADD COLUMN due_date date;
+
+ALTER TABLE invoices ADD COLUMN amount_paid numeric(19,2) DEFAULT 0;
+
+ALTER TABLE payments ADD COLUMN currency varchar(3);
+ALTER TABLE payments ADD COLUMN payer_phone varchar(255);
+ALTER TABLE payments ADD COLUMN failure_reason varchar(255);
+ALTER TABLE payments ADD COLUMN notes varchar(255);
+ALTER TABLE payments ADD COLUMN payment_reference varchar(255);
+ALTER TABLE payments ADD COLUMN payment_url varchar(1000);
+ALTER TABLE payments ADD COLUMN control_number varchar(255);
+ALTER TABLE payments ADD COLUMN receipt_number varchar(32) UNIQUE;
+
+-- Crew membership (staff dashboard)
+CREATE TABLE crew_members (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    crew_id uuid NOT NULL REFERENCES crews(id),
+    staff_id varchar(255) NOT NULL,
+    staff_name varchar(255),
+    member_role varchar(255),
+    joined_on date,
+    created_by uuid, created_at timestamp, updated_by uuid, updated_at timestamp,
+    deleted_at timestamp, deleted boolean DEFAULT false, active boolean DEFAULT true
+);
+
+CREATE TABLE invoice_items (
+    invoice_id uuid NOT NULL REFERENCES invoices(id),
+    line_no integer NOT NULL,
+    description varchar(255) NOT NULL,
+    quantity integer NOT NULL,
+    unit_price numeric(15,2) NOT NULL,
+    amount numeric(15,2) NOT NULL,
+    PRIMARY KEY (invoice_id, line_no)
+);
+</code></pre></div>
+<aside class="note">
+<p>The <code>uuid_generate_v4()</code> default requires the <code>uuid-ossp</code> extension: <code>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</code></p>
+</aside>
+<hr />
+<h2 id="16-implementation-status-and-known-issues">16. Implementation status and known issues</h2>
+<h3 id="not-built-yet">Not built yet</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contracts</td>
+<td><code>/contracts/{id}/jobs</code> listing endpoint not built yet</td>
+</tr>
+<tr>
+<td>Subscriptions</td>
+<td>update (returns <code>null</code>)</td>
+</tr>
+<tr>
+<td>Time logs</td>
+<td>get logs for job, get by ID, update, staff attendance (return <code>null</code>)</td>
+</tr>
+<tr>
+<td>Crews, feedback, staff ratings</td>
+<td>some methods in <code>CrewServiceImpl</code>, <code>FeedBackServiceImpl</code>, <code>StaffRatingServiceImpl</code> (return <code>null</code>)</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>no refund endpoint; <code>REFUNDED</code> results from the payment service are ignored</td>
+</tr>
+<tr>
+<td>Reports, job photos</td>
+<td>no endpoints</td>
+</tr>
+<tr>
+<td>Invoices</td>
+<td>no manual create/update/cancel/send endpoints (invoices are generated from quotations); recurring billing for subscriptions does not create invoices yet</td>
+</tr>
+<tr>
+<td>Checklists</td>
+<td>several controller methods have no HTTP mapping</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="known-issues">Known issues</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Location</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update service path is singular <code>/service/{id}</code></td>
+<td><code>ServiceController</code></td>
+<td>Inconsistent with other <code>/services</code> endpoints</td>
+</tr>
+<tr>
+<td><code>plotCoordinates.toString()</code> without null check</td>
+<td><code>SiteResponseDto</code></td>
+<td>Sites saved without coordinates fail when read</td>
+</tr>
+<tr>
+<td>Lombok 1.18.34 incompatible with JDK 25+</td>
+<td><code>pom.xml</code></td>
+<td>Build fails on newer JDKs</td>
+</tr>
+<tr>
+<td>Redis host/password and Kafka host hard-coded</td>
+<td><code>application.properties</code></td>
+<td>Credentials in source control; move to config server / secrets</td>
+</tr>
+<tr>
+<td><code>DistanceCalculatorService</code> (Google Distance Matrix) commented out</td>
+<td><code>common</code></td>
+<td>Not in use</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="17-development-conventions">17. Development conventions</h2>
+<p>When adding a new module or resource, follow the existing pattern (see <code>masterData/</code> as the reference):</p>
+<ol>
+<li><strong>Entity</strong> in <code>entities/</code>, extending <code>BaseEntity&lt;UUID&gt;</code>, with <code>@Table</code>, <code>@Where(clause = " deleted_at is null")</code> and an <code>@Enumerated(EnumType.STRING)</code> <code>Status</code> where relevant.</li>
+<li><strong>DTOs</strong> in <code>dto/</code>: <code>XxxDto</code> with Jakarta validation, and <code>XxxResponseDto</code> with a constructor taking the entity. Add <code>@Schema</code> descriptions and examples.</li>
+<li><strong>Repository</strong> in <code>repository/</code> extending <code>JpaRepository&lt;Xxx, UUID&gt;</code>.</li>
+<li><strong>Service</strong> interface + <code>XxxServiceImpl</code> (<code>@Transactional</code>), throwing <code>AfriException</code> for business errors and parsing UUIDs safely.</li>
+<li><strong>Controller</strong> under <code>/api/v1</code> with <code>@Tag</code>, <code>@Operation</code>, <code>@Permission</code>, <code>@Valid</code> request bodies, and <code>{id}</code> path variables matching <code>@PathVariable("id")</code>.</li>
+<li>Soft delete by setting <code>deletedAt</code> (and <code>deleted = true</code>); never hard delete.</li>
+<li>Seed reference data with an idempotent <code>CommandLineRunner</code> in <code>seeders/</code>.</li>
+</ol>
+  </main>
+
+  <footer>Generated from <code>docs/SYSTEM_DOCUMENTATION.md</code>. Update the Markdown source and regenerate this page when the system changes.</footer>
+</div>
+
+<script>
+(function () {
+  // Collapse contents by default on narrow screens.
+  var details = document.getElementById('toc-details');
+  var narrow = window.matchMedia('(max-width: 900px)');
+  function syncDetails() { details.open = !narrow.matches; }
+  syncDetails();
+  if (narrow.addEventListener) narrow.addEventListener('change', syncDetails);
+  details.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { if (narrow.matches) details.open = false; });
+  });
+
+  // Highlight the current section in the contents.
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var headings = Array.prototype.slice.call(document.querySelectorAll('main h2[id], main h3[id]'));
+  function onScroll() {
+    var current = null;
+    for (var i = 0; i < headings.length; i++) {
+      if (headings[i].getBoundingClientRect().top <= 90) current = headings[i]; else break;
+    }
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (current && byId[current.id]) byId[current.id].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Endpoint filter.
+  var input = document.getElementById('endpoint-filter');
+  var count = document.getElementById('filter-count');
+  var rows = Array.prototype.slice.call(document.querySelectorAll('table.endpoints tbody tr'));
+  function applyFilter() {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (r) {
+      var match = !q || r.textContent.toLowerCase().indexOf(q) !== -1;
+      r.classList.toggle('hidden-row', !match);
+      if (match) shown++;
+    });
+    count.textContent = q ? shown + ' of ' + rows.length + ' endpoints' : rows.length + ' endpoints';
+  }
+  input.addEventListener('input', applyFilter);
+  applyFilter();
+})();
+</script>

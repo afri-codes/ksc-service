@@ -1,5 +1,6 @@
 package ksc.go.tz.masterData.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import afriSecurity.annotations.Permission;
 import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.enums.ResponseEnum;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Services", description = "Master data: services offered (Cleaning, Fumigation, Property Management)")
 @Slf4j
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -66,14 +68,14 @@ public class ServiceController {
     }
     @Operation(summary = "soft delete service ")
     @Permission(name="DELETE SERVICE", code = "DELETE_SERVICE")
-    @DeleteMapping("/services/{serviceId}")
-    public ApiResponseUtil.ApiResponseEntity<ServiceResponseDto> deleteById(@PathVariable (name = "id") String siteId, Authentication authentication){
-        ServiceResponseDto sites =  siteService.deleteById(siteId, authDetailsExtractor.getUserId(authentication));
+    @DeleteMapping("/services/{id}")
+    public ApiResponseUtil.ApiResponseEntity<ServiceResponseDto> deleteById(@PathVariable("id") String serviceId, Authentication authentication){
+        ServiceResponseDto sites =  siteService.deleteById(serviceId, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, sites,"Service deleted successful",ResponseEnum.SUCCESS);
 
     }
 
-    @Operation(summary = "change service status ")
+    @Operation(summary = "change service status ", description = "Set status to ACTIVE or INACTIVE via the 'status' query parameter (case-insensitive).")
     @Permission(name="CHANGE SERVICE STATUS", code = "CHANGE_SERVICE_STATUS")
     @PatchMapping("/services/{serviceId}/status")
     public ApiResponseUtil.ApiResponseEntity<ServiceResponseDto> changeStatus(@PathVariable("serviceId") String serviceId, @RequestParam("status") String status, Authentication authentication) {

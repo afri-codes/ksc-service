@@ -1,5 +1,6 @@
 package ksc.go.tz.sitesAndAssests.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import afriSecurity.annotations.Permission;
 import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.enums.ResponseEnum;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Sites", description = "Register and manage client sites")
 @Slf4j
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class SiteController {
     private final ApiResponseUtil apiResponseUtil;
 
 
-    @Operation(summary = "Save or add new site")
+    @Operation(summary = "Save or add new site", description = "Registers a site. A cleaning depth (cleaningDepthId) is required and any number of add-ons (addOnIds) may be selected; all must be ACTIVE. totalPrice is calculated by the server as the cleaning depth price plus the sum of add-on prices.")
     @Permission(name="SAVE NEW SITE", code = "SAVE_SITE")
     @PostMapping("/sites")
     public  ApiResponseUtil.ApiResponseEntity<SiteResponseDto> saveSite(@RequestBody @Valid SiteDto siteDto, Authentication authentication) {
@@ -60,18 +62,18 @@ public class SiteController {
         return apiResponseUtil.getResponse(site.get());
     }
 
-    @Operation(summary = "update site ")
+    @Operation(summary = "update site ", description = "Updates a site. cleaningDepthId is required; addOnIds replaces the existing add-ons. totalPrice is recalculated from current prices. If the pricing changes, the open quotation is EXPIRED, the pending invoice CANCELLED, and a new quotation and invoice are generated (their IDs are returned). Pricing changes are rejected once the quotation is ACCEPTED or an invoice is no longer PENDING.")
     @Permission(name="UPDATE SITE", code = "UPDATE_SITE")
     @PutMapping("/sites/{id}")
-    public ApiResponseUtil.ApiResponseEntity<SiteResponseDto> updateSite(@PathVariable("id") String siteId, @RequestBody SiteDto siteDto, Authentication authentication) {
+    public ApiResponseUtil.ApiResponseEntity<SiteResponseDto> updateSite(@PathVariable("id") String siteId, @RequestBody @Valid SiteDto siteDto, Authentication authentication) {
         SiteResponseDto updatedSite = siteService.updateSite(siteId, siteDto, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, updatedSite,"Site updated successful",ResponseEnum.SUCCESS);
 
     }
     @Operation(summary = "soft delete site ")
     @Permission(name="DELETE SITE", code = "DELETE_SITE")
-    @DeleteMapping("/sites/{siteId}")
-    public ApiResponseUtil.ApiResponseEntity<SiteResponseDto> deleteById(@PathVariable (name = "id") String siteId, Authentication authentication){
+    @DeleteMapping("/sites/{id}")
+    public ApiResponseUtil.ApiResponseEntity<SiteResponseDto> deleteById(@PathVariable("id") String siteId, Authentication authentication){
         SiteResponseDto sites =  siteService.deleteById(siteId, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, sites,"Site deleted successful",ResponseEnum.SUCCESS);
 

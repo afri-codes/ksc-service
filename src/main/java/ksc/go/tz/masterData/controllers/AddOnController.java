@@ -1,5 +1,6 @@
 package ksc.go.tz.masterData.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import afriSecurity.annotations.Permission;
 import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.enums.ResponseEnum;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Add-ons", description = "Master data: optional extra services, each with its own price")
 @Slf4j
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class AddOnController {
     private final ApiResponseUtil apiResponseUtil;
 
 
-    @Operation(summary = "Save or add new add-on")
+    @Operation(summary = "Save or add new add-on", description = "Creates an add-on. Name must be unique (case-insensitive) and price must not be negative. New add-ons are ACTIVE.")
     @Permission(name="SAVE NEW ADD ON", code = "SAVE_ADD_ON")
     @PostMapping("/add-ons")
     public ApiResponseUtil.ApiResponseEntity<AddOnResponseDto> saveAddOn(@RequestBody @Valid AddOnDto addOnDto, Authentication authentication) {
@@ -55,7 +57,7 @@ public class AddOnController {
         return apiResponseUtil.getResponse(addOn.get());
     }
 
-    @Operation(summary = "update add-on ")
+    @Operation(summary = "update add-on ", description = "Updates name, price and description. Existing sites keep their stored total price until they are updated.")
     @Permission(name="UPDATE ADD ON", code = "UPDATE_ADD_ON")
     @PutMapping("/add-ons/{id}")
     public ApiResponseUtil.ApiResponseEntity<AddOnResponseDto> updateAddOn(@PathVariable("id") String addOnId, @RequestBody @Valid AddOnDto addOnDto, Authentication authentication) {
@@ -71,7 +73,7 @@ public class AddOnController {
         return apiResponseUtil.getResponse(null, deleted, "Add-on deleted successful", ResponseEnum.SUCCESS);
     }
 
-    @Operation(summary = "change add-on status ")
+    @Operation(summary = "change add-on status ", description = "Set status to ACTIVE or INACTIVE via the 'status' query parameter (case-insensitive). INACTIVE add-ons cannot be selected for sites.")
     @Permission(name="CHANGE ADD ON STATUS", code = "CHANGE_ADD_ON_STATUS")
     @PatchMapping("/add-ons/{id}/status")
     public ApiResponseUtil.ApiResponseEntity<AddOnResponseDto> changeStatus(@PathVariable("id") String addOnId, @RequestParam("status") String status, Authentication authentication) {

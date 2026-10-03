@@ -29,7 +29,7 @@ public class LeadController {
 
 
     @Operation(summary = "Save or add new lead")
-    @Permission(name="SAVE NEW SITE", code = "SAVE_SITE")
+    @Permission(name="SAVE NEW LEAD", code = "SAVE_LEAD")
     @PostMapping("/leads")
     public  ApiResponseUtil.ApiResponseEntity<LeadsResponseDto> saveLead(@RequestBody @Valid LeadDto leadDto, Authentication authentication) {
         UUID createdBy = authDetailsExtractor.getUserId(authentication);
@@ -75,8 +75,8 @@ public class LeadController {
     }
     @Operation(summary = "soft delete lead ")
     @Permission(name="DELETE LEAD", code = "DELETE_LEAD")
-    @DeleteMapping("/leads/{leadId}")
-    public ApiResponseUtil.ApiResponseEntity<LeadsResponseDto> deleteById(@PathVariable (name = "id") String leadId, Authentication authentication){
+    @DeleteMapping("/leads/{id}")
+    public ApiResponseUtil.ApiResponseEntity<LeadsResponseDto> deleteById(@PathVariable("id") String leadId, Authentication authentication){
         LeadsResponseDto leadsResponseDto =  leadService.deleteById(leadId, authDetailsExtractor.getUserId(authentication));
         return apiResponseUtil.getResponse(null, leadsResponseDto,"Lead deleted successful",ResponseEnum.SUCCESS);
 

@@ -20,11 +20,10 @@ public class CleaningDepthSeeder implements CommandLineRunner {
     private record SeedItem(String name, String price, String description) {
     }
 
-    // Prices in TZS
     private static final List<SeedItem> CLEANING_DEPTHS = List.of(
-            new SeedItem("Shallow", "50000", "Light surface cleaning: dusting, sweeping and mopping"),
-            new SeedItem("Medium", "80000", "Standard cleaning including kitchen and bathroom scrubbing"),
-            new SeedItem("Deep", "120000", "Thorough top-to-bottom cleaning including hard-to-reach areas")
+            new SeedItem("Shallow", "505", "Light surface cleaning: dusting, sweeping and mopping"),
+            new SeedItem("Medium", "506", "Standard cleaning including kitchen and bathroom scrubbing"),
+            new SeedItem("Deep", "507", "Thorough top-to-bottom cleaning including hard-to-reach areas")
     );
 
     private final CleaningDepthRepository cleaningDepthRepository;

@@ -20,4 +20,21 @@ public enum LeadServiceType {
         return displayName;
     }
 
+    /**
+     * Matches a service name such as "Property Management" to its constant (by display name or constant name,
+     * ignoring case, spaces and dashes); OTHER when nothing matches.
+     */
+    public static LeadServiceType fromName(String name) {
+        if (name == null) {
+            return OTHER;
+        }
+        String key = name.trim().replaceAll("[\\s-]+", "_").toUpperCase();
+        for (LeadServiceType type : values()) {
+            if (type.name().equals(key) || type.displayName.equalsIgnoreCase(name.trim())) {
+                return type;
+            }
+        }
+        return OTHER;
+    }
+
 }

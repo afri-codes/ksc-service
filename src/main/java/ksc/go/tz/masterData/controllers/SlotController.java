@@ -1,5 +1,6 @@
 package ksc.go.tz.masterData.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import afriSecurity.annotations.Permission;
 import afriSecurity.security.AuthDetailsExtractor;
 import afriUtils.enums.ResponseEnum;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Slots", description = "Master data: available date ranges for booking")
 @Slf4j
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class SlotController {
     private final ApiResponseUtil apiResponseUtil;
 
 
-    @Operation(summary = "Save or add new slot")
+    @Operation(summary = "Save or add new slot", description = "Creates an available slot. endDateTime must be after startDateTime. New slots are ACTIVE.")
     @Permission(name="SAVE NEW SLOT", code = "SAVE_SLOT")
     @PostMapping("/slots")
     public ApiResponseUtil.ApiResponseEntity<SlotResponseDto> saveSlot(@RequestBody @Valid SlotDto slotDto, Authentication authentication) {
@@ -55,7 +57,7 @@ public class SlotController {
         return apiResponseUtil.getResponse(slot.get());
     }
 
-    @Operation(summary = "update slot ")
+    @Operation(summary = "update slot ", description = "Updates the slot's date range. endDateTime must be after startDateTime.")
     @Permission(name="UPDATE SLOT", code = "UPDATE_SLOT")
     @PutMapping("/slots/{id}")
     public ApiResponseUtil.ApiResponseEntity<SlotResponseDto> updateSlot(@PathVariable("id") String slotId, @RequestBody @Valid SlotDto slotDto, Authentication authentication) {
@@ -71,7 +73,7 @@ public class SlotController {
         return apiResponseUtil.getResponse(null, slot, "Slot deleted successful", ResponseEnum.SUCCESS);
     }
 
-    @Operation(summary = "change slot status ")
+    @Operation(summary = "change slot status ", description = "Set status to ACTIVE or INACTIVE via the 'status' query parameter (case-insensitive).")
     @Permission(name="CHANGE SLOT STATUS", code = "CHANGE_SLOT_STATUS")
     @PatchMapping("/slots/{id}/status")
     public ApiResponseUtil.ApiResponseEntity<SlotResponseDto> changeStatus(@PathVariable("id") String slotId, @RequestParam("status") String status, Authentication authentication) {
