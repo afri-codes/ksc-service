@@ -963,6 +963,8 @@ Standalone: leads, services, slots, uploads
 </tr>
 </tbody>
 </table></div>
+<p>The OpenAPI server URL is relative (<code>/</code>), so <strong>Try it out</strong> sends requests to whichever host serves the Swagger page (local, test or production).</p>
+<p>To call secured endpoints from Swagger UI, click <strong>Authorize</strong> and paste a platform JWT (without the <code>Bearer</code> prefix); it is then sent as <code>Authorization: Bearer &lt;token&gt;</code> on every request. The scheme is declared as <code>bearerAuth</code> (HTTP bearer, JWT) in <code>OpenApiConfiguration</code> and applies to all endpoints. It only documents the API; authentication itself is still done by <code>afriSecurity</code>.</p>
 <p>The Master Data (Services, Slots, Cleaning Depths, Add-ons), Sites, Contracts, Invoices, Payments and Dashboards controllers carry <code>@Tag</code> groups, endpoint descriptions and <code>@Schema</code> field descriptions/examples. Other modules (leads, quotes, subscriptions, jobs, files) currently document a summary per endpoint only.</p>
 <hr />
 <h2 id="8-api-reference">8. API reference</h2>

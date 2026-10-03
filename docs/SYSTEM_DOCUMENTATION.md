@@ -382,6 +382,10 @@ The OpenAPI spec is generated at runtime by springdoc from controller and DTO an
 | Swagger UI | `http://<host>:<port>/swagger-ui/index.html` |
 | OpenAPI JSON | `http://<host>:<port>/v3/api-docs` |
 
+The OpenAPI server URL is relative (`/`), so **Try it out** sends requests to whichever host serves the Swagger page (local, test or production).
+
+To call secured endpoints from Swagger UI, click **Authorize** and paste a platform JWT (without the `Bearer ` prefix); it is then sent as `Authorization: Bearer <token>` on every request. The scheme is declared as `bearerAuth` (HTTP bearer, JWT) in `OpenApiConfiguration` and applies to all endpoints. It only documents the API; authentication itself is still done by `afriSecurity`.
+
 The Master Data (Services, Slots, Cleaning Depths, Add-ons), Sites, Contracts, Invoices, Payments and Dashboards controllers carry `@Tag` groups, endpoint descriptions and `@Schema` field descriptions/examples. Other modules (leads, quotes, subscriptions, jobs, files) currently document a summary per endpoint only.
 
 ---
