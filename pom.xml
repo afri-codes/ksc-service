@@ -132,7 +132,7 @@
 		<dependency>
 			<groupId>afriUtils</groupId>
 			<artifactId>afriUtils</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intuit.fuzzymatcher</groupId>
