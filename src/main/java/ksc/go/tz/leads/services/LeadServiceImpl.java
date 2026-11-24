@@ -1,12 +1,19 @@
 package ksc.go.tz.leads.services;
 
 import afriUtils.responses.AfriException;
+import ksc.go.tz.enums.LeadServiceType;
+import ksc.go.tz.enums.LeadStatus;
 import ksc.go.tz.leads.dto.LeadDto;
 import ksc.go.tz.leads.dto.LeadsResponseDto;
 import ksc.go.tz.leads.entities.Leads;
 import ksc.go.tz.leads.repository.LeadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,13 +35,59 @@ public class LeadServiceImpl implements LeadService {
         leads.setFullName(leadDto.getFullName());
         leads.setPhoneNumber(leadDto.getPhoneNumber());
         leads.setEmail(leadDto.getEmail());
-        leads.setServiceLine(leadDto.getServiceLine());
+        leads.setServiceTypeInterest(LeadServiceType.valueOf(leadDto.getServiceLine()));
         leads.setMessage(leadDto.getMessage());
         leads.setSource(leadDto.getSource());
         leads.setStatus(leadDto.getStatus());
         leads.setCreatedBy(createdBy);
         leads.setCreatedAt(now);
         return new LeadsResponseDto(leadRepository.save(leads));
+    }
+
+    @Override
+    public LeadsResponseDto changeLeadStatus(String leadId, String status, UUID userId) {
+        UUID leadUUID;
+
+        try {
+            leadUUID = UUID.fromString(leadId);
+        } catch (IllegalArgumentException e) {
+            throw new AfriException("Invalid lead ID: " + leadId);
+        }
+
+        Leads existingLead = leadRepository.findById(leadUUID)
+                .orElseThrow(() -> new AfriException("Lead not found"));
+
+        existingLead.setStatus(LeadStatus.valueOf(status));
+        existingLead.setUpdatedBy(userId);
+        existingLead.setUpdatedAt(LocalDateTime.now());
+
+        Leads updatedLead = leadRepository.save(existingLead);
+
+        return new LeadsResponseDto(updatedLead);
+    }
+
+    @Override
+    public Page<LeadsResponseDto> getAllLeadsWithPaginationAndSortingAndFiltering(int page, int size, String sortBy, String sortDir, String status, String source, String serviceLine, UUID userId) {
+
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortDir) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Specification<Leads> specification = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+
+        if (status != null && !status.isBlank()) {specification = specification.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+        }
+
+        if (source != null && !source.isBlank()) {specification = specification.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("source"), source));
+        }
+
+        if (serviceLine != null && !serviceLine.isBlank()) {specification = specification.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("serviceLine"), serviceLine));
+        }
+
+        if (userId != null) {specification = specification.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("userId"), userId));
+        }
+
+        return leadRepository.findAll(specification, pageable).map(LeadsResponseDto::new);
     }
 
     @Override
@@ -69,7 +122,7 @@ public class LeadServiceImpl implements LeadService {
         existingSite.setFullName(leadDto.getFullName());
         existingSite.setPhoneNumber(leadDto.getPhoneNumber());
         existingSite.setEmail(leadDto.getEmail());
-        existingSite.setServiceLine(leadDto.getServiceLine());
+        existingSite.setServiceTypeInterest(LeadServiceType.valueOf(leadDto.getServiceLine()));
         existingSite.setMessage(leadDto.getMessage());
         existingSite.setSource(leadDto.getSource());
         existingSite.setStatus(leadDto.getStatus());

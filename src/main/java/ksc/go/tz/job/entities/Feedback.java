@@ -3,6 +3,7 @@ package ksc.go.tz.job.entities;
 
 import jakarta.persistence.*;
 import ksc.go.tz.common.BaseEntity;
+import ksc.go.tz.enums.DisputeStatus;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -22,8 +23,7 @@ public class Feedback extends BaseEntity<UUID> {
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "submitted_by", nullable = false)
+    @Column(name = "submitted_by", nullable = false)
     private String submittedBy;
 
     @Column(name = "service_rating")
@@ -32,7 +32,8 @@ public class Feedback extends BaseEntity<UUID> {
     @Column(columnDefinition = "TEXT")
     private String comment;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "dispute_status")
-    private String disputeStatus;
+    private DisputeStatus disputeStatus;
 
 }

@@ -5,6 +5,10 @@ public enum PaymentMethod {
     BANK("Bank"),
     MOBILE_MONEY("Mobile Money"),
     CARD("Card"),
+    /** Hosted payment page where the client chooses how to pay (payment service CHECKOUT). */
+    CHECKOUT("Checkout"),
+    /** Control number payable via mobile money, bank or agent (payment service BILLPAY). */
+    BILLPAY("BillPay"),
     PAYPAL("PayPal"),
     STRIPE("Stripe"),
     OTHER("Other");

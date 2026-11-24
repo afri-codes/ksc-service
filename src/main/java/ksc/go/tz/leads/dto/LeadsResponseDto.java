@@ -35,7 +35,7 @@ public class LeadsResponseDto {
         this.fullName = leads.getFullName();
         this.phoneNumber = leads.getPhoneNumber();
         this.email = leads.getEmail();
-        this.serviceLine = leads.getServiceLine();
+        this.serviceLine = leads.getServiceTypeInterest().toString();
         this.message = leads.getMessage();
         this.source = leads.getSource();
         this.status = leads.getStatus();

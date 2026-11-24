@@ -19,14 +19,16 @@ import java.util.UUID;
 @Where(clause = " deleted_at is null")
 public class Crew extends BaseEntity<UUID> {
 
-
     @Column(name = "crew_name", nullable = false)
     private String crewName;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "supervisor_id")
-    private String supervisor;
+    @Column(name = "supervisor_id")
+    private String supervisorId;
 
-    @Column(name = "vehicle_type")
-    private String vehicleType;
+    @Column(name = "supervisor_name")
+    private String supervisorName;
+
+    @Column(name = "zone_name")
+    private String zone;
+
 }
